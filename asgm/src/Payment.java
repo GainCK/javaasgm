@@ -14,6 +14,7 @@ public class Payment {
         this.booking = booking;
         this.totalPrice = booking.getTotalPrice();
         this.paymentStatus = "Pending";
+        paymentId++;
     }
 
     public double getAmount() {
@@ -69,6 +70,6 @@ public class Payment {
         System.out.println("Payment Method: " + paymentMethod);
         System.out.println("Total Price: " + totalPrice);
         System.out.println("Payment Status: " + paymentStatus);
-        System.out.println("Booking ID: " + booking.getBookingId());
+        System.out.println("Booking ID: " + booking.getBookingID());
     }
 }

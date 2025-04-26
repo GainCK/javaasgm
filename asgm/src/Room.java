@@ -8,7 +8,9 @@ public class Room {
         this.roomType = roomType;
         this.price = price;
         this.status = true;
+        roomId++;
     }
+
 
     public String getRoomType() {
         return roomType;
