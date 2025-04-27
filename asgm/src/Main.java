@@ -82,7 +82,7 @@ public class Main {
             System.out.println("1. Update Profile");
             System.out.println("2. Booking Menu"); 
             System.out.println("3. Payment Menu"); 
-            System.out.println("3. Logout");
+            System.out.println("4. Logout");
             System.out.print("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
