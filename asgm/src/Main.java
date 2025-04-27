@@ -4,6 +4,8 @@ import java.util.Scanner;
 public class Main {
     // Declare globally so all methods can use it
     static ArrayList<Booking> bookingList = new ArrayList<>();
+    static ArrayList<Room> roomList = new ArrayList<>();
+    static ArrayList<Payment> paymentList = new ArrayList<>();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -78,7 +80,8 @@ public class Main {
         while (true) {
             System.out.println("\n=== Guest Menu ===");
             System.out.println("1. Update Profile");
-            System.out.println("2. Booking Menu"); // Added this
+            System.out.println("2. Booking Menu"); 
+            System.out.println("3. Payment Menu"); 
             System.out.println("3. Logout");
             System.out.print("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
@@ -90,7 +93,13 @@ public class Main {
                 case 2:
                     bookingMenu(scanner); // Booking menu only accessible for guests
                     break;
+
                 case 3:
+                    paymentMenu(scanner); // Payment menu only accessible for guests
+                    break;
+
+
+                case 4:
                     guest.logout();
                     return;
                 default:
@@ -132,4 +141,54 @@ public class Main {
             }
         }
     }
+
+
+    static {
+        // Add 3 Single Rooms
+        for (int j = 0; j < 3; j++) {
+            roomList.add(new Room("Single", 200));
+        }
+
+        // Add 3 Double Rooms
+        for (int k = 0; k < 3; k++) {
+            roomList.add(new Room("Double", 350));
+        }
+
+        // Add 3 Deluxe Rooms
+        for (int l = 0; l < 3; l++) {
+            roomList.add(new Room("Deluxe", 500));
+        }
+    }
+
+    public static void paymentMenu(Scanner scanner) {
+        while (true) {
+            System.out.println("\n=== Payment Menu ===");
+            System.out.println("1. Process Payment");
+            System.out.println("2. Cancel Payment");
+            System.out.println("3. View Payments Hsitory");
+            System.out.println("4. Back to Guest Menu");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+
+            switch (choice) {
+                case 1:
+                     new Payment().processPayment(scanner, paymentList);
+                    break;
+                case 2:
+                    new Payment().cancelPayment();
+                    break;
+              
+                case 3:
+                   new Payment().viewPaymentsHistory(paymentList);
+                    break;
+                case 4:
+                    return; 
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+
+
 }
