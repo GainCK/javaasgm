@@ -79,18 +79,17 @@ public class Payment {
 
         switch (paymentMethod) {
             case 1:
-                Cash cash = new Cash();
-                cash.validateAmount();
-                cash.calculateChange();
-                break;
-            case 2:
-                EWallet eWallet = new EWallet();
-                eWallet.validateEWallet(scanner);
-                break;
-            case 3:
-                Card card = new Card();
-                card.validateCard(scanner);
-                break;
+            Cash cash = new Cash(amount, paymentMethod, booking, 0.0);
+            cash.validateAmount();
+            break;
+        case 2:
+            EWallet eWallet = new EWallet(amount, paymentMethod, booking, "", 0);
+            eWallet.validateEWallet(scanner);
+            break;
+        case 3:
+            Card card = new Card(amount, paymentMethod, booking, "", "", "", "");
+            card.validateCard(scanner);
+            break;
             default:
                 System.out.println("Invalid payment method! Please select again.");
                 return;  // Return early in case of invalid choice

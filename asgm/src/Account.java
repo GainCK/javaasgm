@@ -13,7 +13,7 @@ public class Account {
     private String email;
     protected static List<Account> accountList = new ArrayList<>();
 
-    // Constructors
+
     public Account() {}
 
     public Account(String name, String password, String birthday, String IC, String phoneNo, String email) {
@@ -25,7 +25,6 @@ public class Account {
         this.email = email;
     }
 
-    // Getters and Setters
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
@@ -44,7 +43,6 @@ public class Account {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    // Methods
     public void updateProfile(String name, String password, String birthday, String IC, String phoneNo, String email) {
         this.name = name;
         this.password = password;
@@ -78,7 +76,6 @@ public class Account {
     public void logout() {
         System.out.println(this.name + " has logged out.");
     }
-     // Method to validate IC (only numbers)
     public static boolean isValidIC(String ic) {
         String regex = "^[0-9]+$"; // Only numbers
         Pattern pattern = Pattern.compile(regex);
@@ -86,7 +83,6 @@ public class Account {
         return matcher.matches();
     }
 
-    // Method to validate PhoneNo (only numbers)
     public static boolean isValidPhoneNo(String phoneNo) {
         String regex = "^[0-9]+$"; // Only numbers
         Pattern pattern = Pattern.compile(regex);
@@ -94,7 +90,6 @@ public class Account {
         return matcher.matches();
     }
 
-    // Method to validate Birthday (dd/mm/yyyy format)
     public static boolean isValidBirthday(String birthday) {
         String regex = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/([0-9]{4})$"; // dd/mm/yyyy format
         Pattern pattern = Pattern.compile(regex);
@@ -102,7 +97,6 @@ public class Account {
         return matcher.matches();
     }
 
-    // Method to validate Email (any valid email format)
     public static boolean isValidEmail(String email) {
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"; // Valid email format
         Pattern pattern = Pattern.compile(regex);

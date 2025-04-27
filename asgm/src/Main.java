@@ -172,23 +172,45 @@ public class Main {
             scanner.nextLine(); // consume newline
 
             switch (choice) {
-                case 1:
-                     new Payment().processPayment(scanner, paymentList);
-                    break;
-                case 2:
-                    new Payment().cancelPayment();
-                    break;
-              
-                case 3:
-                   new Payment().viewPaymentsHistory(paymentList);
-                    break;
-                case 4:
-                    return; 
-                default:
-                    System.out.println("Invalid choice!");
-            }
-        }
-    }
+                                case 1:
+                                    // 1a) ensure there is at least one booking
+                                    if (bookingList.isEmpty()) {
+                                        System.out.println("You have no bookings to pay for. Please create a booking first.");
+                                        break;
+                                    }
+                                    // 1b) ask which booking to pay
+                                    System.out.print("Enter Booking ID to pay for: ");
+                                    String bid = scanner.nextLine();
+                                    Booking toPay = null;
+                                    for (Booking b : bookingList) {
+                                        if (b.getBookingID().equalsIgnoreCase(bid)) {
+                                            toPay = b;
+                                            break;
+                                        }
+                                    }
+                                    if (toPay == null) {
+                                        System.out.println("Booking ID not found.");
+                                        break;
+                                    }
+                                   // 1c) create Payment tied to that booking
+                                    Payment payment = new Payment(0.0, 0, toPay);
+                                    payment.processPayment(scanner, paymentList);
+                                    // 1d) store it
+                                    paymentList.add(payment);
+                                    break;
+                                case 2:
+                                     new Payment().cancelPayment();
+                                     break;
+                                 case 3:
+                                     new Payment().viewPaymentsHistory(paymentList);
+                                     break;
+                                 case 4:
+                                     return; 
+                                 default:
+                                     System.out.println("Invalid choice!");
+                             }
+                         }
+                     }
 
 
 }
