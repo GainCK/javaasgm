@@ -10,6 +10,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+
         // Main Menu Loop
         while (true) {
             System.out.println("\n=== Main Menu ===");
@@ -55,10 +56,10 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    staff.checkInRoom();
+                    staff.checkInRoom(scanner);
                     break;
                 case 2:
-                    staff.checkOutRoom();
+                    staff.checkOutRoom(scanner);
                     break;
                 case 3:
                     staff.generateReport();
@@ -93,12 +94,9 @@ public class Main {
                 case 2:
                     bookingMenu(scanner); // Booking menu only accessible for guests
                     break;
-
                 case 3:
                     paymentMenu(scanner); // Payment menu only accessible for guests
                     break;
-
-
                 case 4:
                     guest.logout();
                     return;
@@ -142,7 +140,6 @@ public class Main {
         }
     }
 
-
     static {
         // Add 3 Single Rooms
         for (int j = 0; j < 3; j++) {
@@ -165,52 +162,53 @@ public class Main {
             System.out.println("\n=== Payment Menu ===");
             System.out.println("1. Process Payment");
             System.out.println("2. Cancel Payment");
-            System.out.println("3. View Payments Hsitory");
+            System.out.println("3. View Payments History");
             System.out.println("4. Back to Guest Menu");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
 
             switch (choice) {
-                                case 1:
-                                    // 1a) ensure there is at least one booking
-                                    if (bookingList.isEmpty()) {
-                                        System.out.println("You have no bookings to pay for. Please create a booking first.");
-                                        break;
-                                    }
-                                    // 1b) ask which booking to pay
-                                    System.out.print("Enter Booking ID to pay for: ");
-                                    String bid = scanner.nextLine();
-                                    Booking toPay = null;
-                                    for (Booking b : bookingList) {
-                                        if (b.getBookingID().equalsIgnoreCase(bid)) {
-                                            toPay = b;
-                                            break;
-                                        }
-                                    }
-                                    if (toPay == null) {
-                                        System.out.println("Booking ID not found.");
-                                        break;
-                                    }
-                                   // 1c) create Payment tied to that booking
-                                    Payment payment = new Payment(0.0, 0, toPay);
-                                    payment.processPayment(scanner, paymentList);
-                                    // 1d) store it
-                                    paymentList.add(payment);
-                                    break;
-                                case 2:
-                                     new Payment().cancelPayment();
-                                     break;
-                                 case 3:
-                                     new Payment().viewPaymentsHistory(paymentList);
-                                     break;
-                                 case 4:
-                                     return; 
-                                 default:
-                                     System.out.println("Invalid choice!");
-                             }
-                         }
-                     }
+                case 1:
+                    // Ensure the logged-in user has bookings to pay for
+                    if (bookingList.isEmpty()) {
+                        System.out.println("You have no bookings to pay for. Please create a booking first.");
+                        break;
+                    }
+                    // Process payment for a booking tied to the logged-in guest
+                    System.out.print("Enter Booking ID to pay for: ");
+                    String bid = scanner.nextLine();
+                    Booking toPay = null;
+                    for (Booking b : bookingList) {
+                        if (b.getBookingID().equalsIgnoreCase(bid)) {
+                            toPay = b;
+                            break;
+                        }
+                    }
+                    if (toPay == null) {
+                        System.out.println("Booking ID not found.");
+                        break;
+                    }
+                    // Create Payment for that booking
+                    Payment payment = new Payment(0.0, 0, toPay);
+                    payment.processPayment(scanner, paymentList);
+                    // Store payment
+                    paymentList.add(payment);
+                    break;
 
+                case 2:
+                    new Payment().cancelPayment();
+                    break;
 
+                case 3:
+                    new Payment().viewPaymentsHistory(paymentList);
+                    break;
+
+                case 4:
+                    return; // Back to Guest Menu
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
 }

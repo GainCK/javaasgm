@@ -1,19 +1,18 @@
 public class Room {
-    private static int roomCounter = 1001; // Static counter shared by all rooms
-
-    private int roomId;    // Unique ID per room
+    private int roomId;    
     private String roomType;
     private double price;
-    private boolean status;
+    private boolean status;  
+    private static int roomCount = 1001;
 
     public Room(String roomType, double price) {
-        this.roomId = roomCounter++; // Assign ID and increment counter
+        this.roomId = roomCount++;
         this.roomType = roomType;
         this.price = price;
-        this.status = true; // Available by default
+        this.status = true;  
     }
 
-    // Getters
+    // Getters and Setters
     public int getRoomId() {
         return roomId;
     }
@@ -30,7 +29,6 @@ public class Room {
         return status;
     }
 
-    // Setters
     public void setRoomType(String roomType) {
         this.roomType = roomType;
     }
@@ -43,11 +41,23 @@ public class Room {
         this.status = status;
     }
 
-    // Update room details
-    public void updateRoom(String roomType, double price) {
-        this.roomType = roomType;
-        this.price = price;
-        this.status = true;
+    // Methods to change room status
+    public void checkIn() {
+        if (status) { 
+            status = false;  // Change to occupied
+            System.out.println("Room " + roomId + " is now occupied.");
+        } else {
+            System.out.println("Room " + roomId + " is already occupied.");
+        }
+    }
+
+    public void checkOut() {
+        if (!status) { 
+            status = true;  // Change to available
+            System.out.println("Room " + roomId + " is now available.");
+        } else {
+            System.out.println("Room " + roomId + " is already available.");
+        }
     }
 
     // Display room info

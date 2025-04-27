@@ -131,6 +131,19 @@ public class Payment {
         System.out.println("Booking ID: " + booking.getBookingID());
     }
 
+    private String getPaymentMethodString() {
+        switch (paymentMethod) {
+            case 1:
+                return "Cash";
+            case 2:
+                return "E-wallet";
+            case 3:
+                return "Card";
+            default:
+                return "Unknown";
+        }
+    }
+
     // View Payments History
     public void viewPaymentsHistory(ArrayList<Payment> paymentList) {
         System.out.println("\n=== Payments History ===");

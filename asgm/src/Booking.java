@@ -177,7 +177,7 @@ public class Booking {
             System.out.println("No bookings found.");
         } else {
             for (Booking booking : bookingList) {
-                booking.displayBookingDetail();
+                booking.displayBookingDetail();  
                 System.out.println("--------------------------");
             }
         }
@@ -187,11 +187,33 @@ public class Booking {
     public void displayBookingDetail() {
         System.out.println("Booking ID: " + bookingID);
         System.out.println("Customer Name: " + custName);
-        System.out.println("Room Type: " + roomType.getRoomType());
+        System.out.println("Room Type: " + roomType.getRoomType());  // Correct usage
         System.out.println("Check-In Date: " + checkInDate);
         System.out.println("Check-Out Date: " + checkOutDate);
-        System.out.println("Total Price: " + totalPrice);
+        System.out.println("Total Price: RM " + totalPrice);
         System.out.println("Payment Status: " + paymentStatus);
         System.out.println("Booking Status: " + bookingStatus);
+    }
+
+    // Check-In for the booking (Set room status to occupied)
+    public void checkIn() {
+        if (roomType.isAvailable()) {
+            roomType.checkIn();
+            bookingStatus = "Checked-In";
+            System.out.println("Booking " + bookingID + " has been checked in.");
+        } else {
+            System.out.println("Room " + roomType.getRoomId() + " is not available for check-in.");
+        }
+    }
+
+    // Check-Out for the booking (Set room status to available)
+    public void checkOut() {
+        if (!roomType.isAvailable()) {
+            roomType.checkOut();
+            bookingStatus = "Checked-Out";
+            System.out.println("Booking " + bookingID + " has been checked out.");
+        } else {
+            System.out.println("Room " + roomType.getRoomId() + " is already available.");
+        }
     }
 }
