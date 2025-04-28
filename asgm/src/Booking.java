@@ -11,6 +11,7 @@ public class Booking {
     private String paymentStatus;
     private String bookingStatus;
     private Payment payment; // New field to store payment
+    private RoomService roomService; // New field to store room service
     private static int bookingCounter = 1;
 
     public Booking(String bookingID, String custName, Room roomType, String checkInDate, String checkOutDate) {
@@ -23,8 +24,40 @@ public class Booking {
         this.paymentStatus = "Pending";
         this.bookingStatus = "Confirmed";
         this.payment = new Payment(0.0, 0, this); // Initialize Payment object with zero amount and payment method 0
+         
+        //this.roomService = new RoomService(new Guest(custName), roomType, 0.0);
     }
 
+    // Call room service for this booking
+    public void callRoomService() {
+        roomService.callRoomService();
+    }
+
+    // Cancel room service for this booking
+    public void cancelRoomService() {
+        roomService.cancelRoomService();
+    }
+
+    // Order breakfast for the booking
+    public void orderBreakfast() {
+        roomService.buyBreakfast();
+    }
+
+    // Cancel breakfast for the booking
+    public void cancelBreakfast() {
+        roomService.cancelBreakfast();
+    }
+
+    // Add room service fee to payment
+    public void addRoomServiceFeeToPayment() {
+        roomService.addFeeToPayment();
+    }
+
+    // Display room service status for this booking
+    public void displayRoomServiceStatus() {
+        roomService.displayServiceStatus();
+    }
+    
     // Getters
     public String getBookingID() {
         return bookingID;

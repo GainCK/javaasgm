@@ -82,7 +82,8 @@ public class Main {
             System.out.println("\n=== Guest Menu ===");
             System.out.println("1. Update Profile");
             System.out.println("2. Booking Menu"); 
-            System.out.println("3. Payment Menu"); 
+            System.out.println("3. Room Services"); 
+            System.out.println("4. Payment Menu");
             System.out.println("4. Logout");
             System.out.print("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
@@ -94,10 +95,15 @@ public class Main {
                 case 2:
                     bookingMenu(scanner); // Booking menu only accessible for guests
                     break;
+
                 case 3:
+                    roomServiceMenu(scanner); // Room service menu only accessible for guests
+                break;
+
+                case 4:
                     paymentMenu(scanner); // Payment menu only accessible for guests
                     break;
-                case 4:
+                case 5:
                     guest.logout();
                     return;
                 default:
@@ -206,6 +212,45 @@ public class Main {
 
                 case 4:
                     return; // Back to Guest Menu
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+
+    public static void roomServiceMenu(Scanner scanner) {
+        while (true) {
+            System.out.println("\n=== Room Service Menu ===");
+            System.out.println("1. Order Room Service");
+            System.out.println("2. Cancel Room Service");
+            System.out.println("3. Buy Breakfast Package");
+            System.out.println("4. Cancel Lunch Package");
+            System.out.println("5. View Room Service Status");
+            System.out.println("6. Back to Guest Menu");
+            System.out.print("Enter your choice: ");
+            RoomService roomService = new RoomService();
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // consume newline
+
+            switch (choice) {
+                case 1:
+                   roomService.callRoomService();
+                    break;
+                case 2:
+                  roomService.cancelRoomService();
+                    break;
+                case 3:
+                    roomService.buyBreakfast();
+                    break;
+                case 4:
+                    roomService.cancelBreakfast();
+                    break;
+                case 5:
+                    roomService.displayServiceStatus();
+                    break;
+                case 6:
+                    return; 
+
                 default:
                     System.out.println("Invalid choice!");
             }

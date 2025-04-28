@@ -52,6 +52,10 @@ public class Payment {
         return paymentId;
     }
 
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     // Setters
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
