@@ -127,9 +127,15 @@ public class RoomService {
             System.out.println("No payment found for this booking.");
             return;
         }
-        payment.setTotalPrice(payment.getTotalPrice() + fee);
-        System.out.printf("Fee of RM %.2f added to payment.\n", fee);
-        fee = 0.0;
+    
+        double oldTotal = payment.getTotalPrice();
+        double newTotal = oldTotal + fee;
+    
+        payment.setTotalPrice(newTotal);
+        payment.setAmount(newTotal);  // 💡 add this to reflect new amount
+    
+        System.out.printf("Fee of RM %.2f added to payment. New total: RM %.2f\n", fee, newTotal);
+        fee = 0.0;  // reset after applying
     }
 
     public void displayServiceStatus() {

@@ -55,6 +55,10 @@ public class Payment {
         this.totalPrice = totalPrice;
     }
 
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
@@ -62,7 +66,6 @@ public class Payment {
     public void processPayment(Scanner scanner, ArrayList<Payment> paymentList) {
         System.out.println("=== Payment Processing ===");
 
-        // Prevent re-payment
         if (paymentStatus.equalsIgnoreCase("Completed")) {
             System.out.println("This payment has already been completed. You cannot pay again.");
             return;
@@ -71,6 +74,13 @@ public class Payment {
             return;
         }
 
+        // ✅ Fetch and apply latest room service fee before processing
+        RoomService roomService = booking.getRoomService();
+        if (roomService != null) {
+            roomService.addFeeToPayment();  // updates totalPrice and amount
+        }
+
+        // Show updated amount after service fee
         System.out.println("Amount needs to be paid: RM " + totalPrice);
 
         if (totalPrice == 0.0) {
@@ -138,19 +148,6 @@ public class Payment {
         System.out.println("Total Price: RM " + totalPrice);
         System.out.println("Payment Status: " + paymentStatus);
         System.out.println("Booking ID: " + booking.getBookingID());
-    }
-
-    private String getPaymentMethodString() {
-        switch (paymentMethod) {
-            case 1:
-                return "Cash";
-            case 2:
-                return "E-wallet";
-            case 3:
-                return "Card";
-            default:
-                return "Unknown";
-        }
     }
 
     public void viewPaymentsHistory(ArrayList<Payment> paymentList) {
