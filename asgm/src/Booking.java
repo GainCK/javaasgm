@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,17 +17,16 @@ public class Booking {
     private Guest guest;
     private RoomService roomService; // Will be linked properly
     private static int bookingCounter = 1;
-   
-   
 
-    public Booking(String bookingID, Guest guest, Room roomType, String checkInDate, String checkOutDate) {
+    public Booking(String bookingID, Guest guest, Room roomType, String checkInDate, String checkOutDate,
+            double totalPrice) {
         this.bookingID = bookingID;
         this.guest = guest;
         this.custName = guest.getName(); // keep custName in sync for backward compatibility
         this.roomType = roomType;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-        this.totalPrice = roomType.getPrice();
+        this.totalPrice = totalPrice; // use calculated price
         this.paymentStatus = "Pending";
         this.bookingStatus = "Confirmed";
         this.roomService = new RoomService(this);
@@ -96,8 +98,6 @@ public class Booking {
     public Payment getPayment() {
         return payment;
     }
-    
-    
 
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
@@ -151,15 +151,31 @@ public class Booking {
                 room = new Room("Single", 200);
         }
 
-        System.out.print("Enter check-in date (DD-MM-YYYY): ");
-        String checkInDate = scanner.nextLine();
-        System.out.print("Enter check-out date (DD-MM-YYYY): ");
-        String checkOutDate = scanner.nextLine();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
+        System.out.print("Enter check-in date (DD-MM-YYYY): ");
+        String checkInStr = scanner.nextLine();
+        System.out.print("Enter check-out date (DD-MM-YYYY): ");
+        String checkOutStr = scanner.nextLine();
+
+        // Convert to LocalDate
+        LocalDate checkInDate = LocalDate.parse(checkInStr, formatter);
+        LocalDate checkOutDate = LocalDate.parse(checkOutStr, formatter);
+
+        // Calculate number of days booked
+        long daysBooked = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+
+        if (daysBooked <= 0) {
+            System.out.println("Error: Check-out date must be after check-in date.");
+            return;
+        }
+
+        double totalPrice = room.getPrice() * daysBooked;
         String newBookingID = "B" + bookingCounter++;
-        Guest guest = new Guest(); // default constructor
-        guest.setName(custName); // assuming there's a setName() method
-        Booking newBooking = new Booking(newBookingID, guest, room, checkInDate, checkOutDate);
+        Guest guest = new Guest();
+        guest.setName(custName);
+
+        Booking newBooking = new Booking(newBookingID, guest, room, checkInStr, checkOutStr, totalPrice);
 
         bookingList.add(newBooking);
 
@@ -197,8 +213,20 @@ public class Booking {
                 System.out.print("Enter new check-out date (DD-MM-YYYY): ");
                 String newCheckOut = scanner.nextLine();
 
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                LocalDate newCheckInDate = LocalDate.parse(newCheckIn, formatter);
+                LocalDate newCheckOutDate = LocalDate.parse(newCheckOut, formatter);
+                long newDaysBooked = ChronoUnit.DAYS.between(newCheckInDate, newCheckOutDate);
+
+                if (newDaysBooked <= 0) {
+                    System.out.println("Error: Check-out date must be after check-in date.");
+                    return;
+                }
+
                 booking.setCheckInDate(newCheckIn);
                 booking.setCheckOutDate(newCheckOut);
+                booking.totalPrice = booking.getRoomType().getPrice() * newDaysBooked;
+
                 System.out.println("Booking " + bookingID + " updated successfully.");
                 return;
             }
