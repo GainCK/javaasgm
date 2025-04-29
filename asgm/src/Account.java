@@ -14,7 +14,7 @@ public class Account {
     protected static List<Account> accountList = new ArrayList<>();
 
 
-    public Account() {}
+    public Account() {};
 
     public Account(String name, String password, String birthday, String IC, String phoneNo, String email) {
         this.name = name;

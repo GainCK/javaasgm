@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List;
 
 public class Main {
     // Declare globally so all methods can use it
@@ -9,7 +10,6 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
 
         // Main Menu Loop
         while (true) {
@@ -84,7 +84,7 @@ public class Main {
             System.out.println("2. Booking Menu"); 
             System.out.println("3. Room Services"); 
             System.out.println("4. Payment Menu");
-            System.out.println("4. Logout");
+            System.out.println("5. Logout");
             System.out.print("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -97,8 +97,16 @@ public class Main {
                     break;
 
                 case 3:
-                    roomServiceMenu(scanner); // Room service menu only accessible for guests
-                break;
+                    // Fetch bookings for the logged-in guest
+                    List<Booking> bookings = getBookingsForGuest(guest);
+                    if (bookings.isEmpty()) {
+                        System.out.println("No bookings found. Please create a booking first.");
+                        break;
+                    }
+                    // Allow guest to select a booking for room service
+                    Booking selectedBooking = promptUserToSelectBooking(scanner, bookings);
+                    roomServiceMenu(scanner, selectedBooking); // Pass selected booking here
+                    break;
 
                 case 4:
                     paymentMenu(scanner); // Payment menu only accessible for guests
@@ -218,7 +226,8 @@ public class Main {
         }
     }
 
-    public static void roomServiceMenu(Scanner scanner) {
+    // Modified Room Service menu
+    public static void roomServiceMenu(Scanner scanner, Booking booking) {
         while (true) {
             System.out.println("\n=== Room Service Menu ===");
             System.out.println("1. Order Room Service");
@@ -228,16 +237,16 @@ public class Main {
             System.out.println("5. View Room Service Status");
             System.out.println("6. Back to Guest Menu");
             System.out.print("Enter your choice: ");
-            RoomService roomService = new RoomService();
+            RoomService roomService = new RoomService(booking); // Pass selected booking here
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
 
             switch (choice) {
                 case 1:
-                   roomService.callRoomService();
+                    roomService.callRoomService();
                     break;
                 case 2:
-                  roomService.cancelRoomService();
+                    roomService.cancelRoomService();
                     break;
                 case 3:
                     roomService.buyBreakfast();
@@ -255,5 +264,27 @@ public class Main {
                     System.out.println("Invalid choice!");
             }
         }
+    }
+
+    // Helper method to allow guest to select a booking
+    public static Booking promptUserToSelectBooking(Scanner scanner, List<Booking> bookings) {
+        System.out.println("Select a booking:");
+        for (int i = 0; i < bookings.size(); i++) {
+            System.out.println((i + 1) + ". " + bookings.get(i).getBookingID() + " - " + bookings.get(i).getRoomType());
+        }
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+        return bookings.get(choice - 1);
+    }
+
+    // Method to fetch bookings for the guest (for simplicity, it's a stub)
+    public static List<Booking> getBookingsForGuest(Guest guest) {
+        List<Booking> result = new ArrayList<>();
+        for (Booking b : bookingList) {
+            if (b.getGuest().equals(guest)) {
+                result.add(b);
+            }
+        }
+        return result;
     }
 }

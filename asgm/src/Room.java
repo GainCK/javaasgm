@@ -4,14 +4,14 @@ public class Room {
     private double price;
     private boolean status;  
     private static int roomCount = 1001;
-    private RoomService roomService; 
+
 
     public Room(String roomType, double price) {
         this.roomId = roomCount++;
         this.roomType = roomType;
         this.price = price;
         this.status = true;  
-        this.roomService = new RoomService(); // Initialize room service
+       
     }
 
     // Getters and Setters
@@ -31,9 +31,7 @@ public class Room {
         return status;
     }
 
-    public RoomService getRoomService() {
-        return roomService;
-    }
+ 
 
     public void setRoomType(String roomType) {
         this.roomType = roomType;
@@ -47,9 +45,7 @@ public class Room {
         this.status = status;
     }
 
-    public void setRoomService(RoomService roomService) {
-        this.roomService = roomService;
-    }
+ 
 
     // Methods to change room status
     public void checkIn() {

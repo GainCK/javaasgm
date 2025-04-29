@@ -1,79 +1,48 @@
 public class RoomService {
-    private Guest guest;
-    private Room room;
-    private double fee;
+    private Booking booking;
     private Payment payment;
-
+    private Guest guest; 
+    private double fee;
     private boolean roomServiceActive;
     private boolean breakfastOrdered;
 
-    private static int totalRoomServiceCalls = 0;  
-    private static final double breakfastFee = 20.0; 
+    private static int totalRoomServiceCalls = 0;
+    private static double totalRoomServiceFee = 0.0;
+    private static final double breakfastFee = 20.0;
     private static final double singleRoomServiceFee = 50.0;
     private static final double doubleRoomServiceFee = 70.0;
     private static final double deluxeRoomServiceFee = 100.0;
 
-    // Default constructor
-    public RoomService() {
-        this.guest = null;
-        this.room = null;
+    public RoomService(Booking booking) {
+        this.booking = booking;
+        this.guest = booking != null ? booking.getGuest() : null; // Initialize guest from booking
         this.fee = 0.0;
-        this.payment = null;
         this.roomServiceActive = false;
         this.breakfastOrdered = false;
     }
 
-    // Constructor with guest and room
-    public RoomService(Guest guest, Room room, double fee) {
-        this.guest = guest;
-        this.room = room;
-        this.fee = fee;
-        this.payment = null; // Payment can be linked later
-        this.roomServiceActive = false;
-        this.breakfastOrdered = false;
+    public RoomService() {
+        this(null);
     }
 
-    // Getter and Setter methods
-    public Guest getGuest() {
-        return guest;
+  
+
+    public Payment getPayment()    {
+        return payment;
     }
 
-    public void setGuest(Guest guest) {
-        this.guest = guest;
-    }
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
-    public double getFee() {
-        return fee;
-    }
-
-    public void setFee(double fee) {
-        this.fee = fee;
-    }
-
-    // Link a Payment object
     public void connectPayment(Payment payment) {
         this.payment = payment;
     }
 
-    // Call room service with dynamic fee based on room type
     public void callRoomService() {
+        Room room = booking.getRoomType();
         if (guest == null || room == null) {
             System.out.println("Error: Guest or Room information is missing.");
-            return;
-        }
-        if (!roomServiceActive) { // prevent double increment
-            roomServiceActive = true;
-            System.out.println("Room service called for " + guest.getName() + " in room " + room.getRoomId() + ".");
+            return;}
 
-            // Adjust fee based on room type
+        if (!roomServiceActive) {
+            roomServiceActive = true;
             switch (room.getRoomType().toLowerCase()) {
                 case "deluxe":
                     fee += deluxeRoomServiceFee;
@@ -86,26 +55,22 @@ public class RoomService {
                     fee += singleRoomServiceFee;
                     break;
             }
-
-            System.out.println("Additional fee added based on room type.");
             totalRoomServiceCalls++;
+            totalRoomServiceFee += fee;
+            System.out.println("Room service called. Fee updated.");
         } else {
             System.out.println("Room service is already active.");
         }
     }
 
-    // Cancel room service
     public void cancelRoomService() {
-
+        Room room = booking.getRoomType();
         if (guest == null || room == null) {
             System.out.println("Error: Guest or Room information is missing.");
-            return;
-        }
+            return;        }
+
         if (roomServiceActive) {
             roomServiceActive = false;
-            System.out.println("Room service cancelled for " + guest.getName() + " in room " + room.getRoomId() + ".");
-
-            // Adjust fee based on room type, ensuring no negative fee
             switch (room.getRoomType().toLowerCase()) {
                 case "deluxe":
                     fee = Math.max(0.0, fee - deluxeRoomServiceFee);
@@ -118,72 +83,74 @@ public class RoomService {
                     fee = Math.max(0.0, fee - singleRoomServiceFee);
                     break;
             }
-
-            totalRoomServiceCalls = Math.max(0, totalRoomServiceCalls - 1); // Prevent negative calls
+            totalRoomServiceFee = Math.max(0, totalRoomServiceFee - fee);
+            totalRoomServiceCalls = Math.max(0, totalRoomServiceCalls - 1);
+            System.out.println("Room service cancelled.");
         } else {
-            System.out.println("No active room service to cancel for " + guest.getName() + ".");
+            System.out.println("No active room service to cancel.");
         }
     }
 
-    // Buy breakfast
     public void buyBreakfast() {
+        Room room = booking.getRoomType();
         if (guest == null || room == null) {
             System.out.println("Error: Guest or Room information is missing.");
-            return;
-        }
-        if (!breakfastOrdered) { // prevent double increment
+            return;        }
+        if (!breakfastOrdered) {
             breakfastOrdered = true;
-            System.out.println("Breakfast ordered for " + guest.getName() + " in room " + room.getRoomId() + ".");
             fee += breakfastFee;
-            System.out.println("Additional fee of RM " + breakfastFee + " added.");
             totalRoomServiceCalls++;
+            totalRoomServiceFee += breakfastFee;
+            System.out.println("Breakfast ordered.");
         } else {
             System.out.println("Breakfast already ordered.");
         }
     }
 
-    // Cancel breakfast
     public void cancelBreakfast() {
+        Room room = booking.getRoomType();
         if (guest == null || room == null) {
             System.out.println("Error: Guest or Room information is missing.");
-            return;
-        }
+            return;        }
         if (breakfastOrdered) {
             breakfastOrdered = false;
-            System.out.println("Breakfast cancelled for " + guest.getName() + " in room " + room.getRoomId() + ".");
-            fee = Math.max(0.0, fee - breakfastFee); // Prevent negative fee
-            totalRoomServiceCalls = Math.max(0, totalRoomServiceCalls - 1); // Prevent negative calls
+            fee = Math.max(0.0, fee - breakfastFee);
+            totalRoomServiceFee = Math.max(0, totalRoomServiceFee - breakfastFee);
+            totalRoomServiceCalls = Math.max(0, totalRoomServiceCalls - 1);
+            System.out.println("Breakfast cancelled.");
         } else {
-            System.out.println("No breakfast order to cancel for " + guest.getName() + ".");
+            System.out.println("No breakfast order to cancel.");
         }
     }
 
-    // Add fee to payment
     public void addFeeToPayment() {
+        Payment payment = booking.getPayment();
         if (payment == null) {
-            System.out.println("Error: No payment connected. Cannot add fees.");
+            System.out.println("No payment found for this booking.");
             return;
         }
         payment.setTotalPrice(payment.getTotalPrice() + fee);
-        System.out.printf("Fee of RM %.2f added to Payment ID %d.\n", fee, payment.getPaymentId());
-        System.out.println("New Total Price: RM " + payment.getTotalPrice());
-        fee = 0.0; // Reset fee after adding to payment
+        System.out.printf("Fee of RM %.2f added to payment.\n", fee);
+        fee = 0.0;
     }
 
-    // Display current service status
     public void displayServiceStatus() {
+        Room room = booking.getRoomType();
         if (guest == null || room == null) {
-            System.out.println("Guest or Room information is incomplete.");
-            return;
-        }
-        System.out.println("Service Status for " + guest.getName() + " in Room " + room.getRoomId() + ":");
+            System.out.println("Error: Guest or Room information is missing.");
+            return;        }
+        System.out.println("Room Service Status for Booking ID: " + booking.getBookingID());
+        System.out.println("- Room Type: " + booking.getRoomType().getRoomType());
         System.out.println("- Room Service Active: " + (roomServiceActive ? "Yes" : "No"));
         System.out.println("- Breakfast Ordered: " + (breakfastOrdered ? "Yes" : "No"));
-        System.out.println("- Current Additional Fee: RM " + fee);
+        System.out.printf("- Current Additional Fee: RM %.2f\n", fee);
     }
 
-    // Get total room service calls across all guests
     public static int getTotalRoomServiceCalls() {
         return totalRoomServiceCalls;
+    }
+
+    public static double getTotalRoomServiceFee() {
+        return totalRoomServiceFee;
     }
 }
