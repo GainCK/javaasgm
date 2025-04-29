@@ -1,6 +1,5 @@
 public class Guest extends Account {
 
-    // Constructors
     public Guest() {
         super();
     }
@@ -9,5 +8,8 @@ public class Guest extends Account {
         super(name, password, birthday, IC, phoneNo, email);
     }
 
-    
+    @Override
+    public void displayAccountType() {
+        System.out.println("Account Type: Guest");
+    }
 }

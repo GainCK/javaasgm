@@ -13,6 +13,7 @@ public class Main {
 
         // Main Menu Loop
         while (true) {
+            clearScreen();
             System.out.println("\n=== Main Menu ===");
             System.out.println("1. Register");
             System.out.println("2. Login");
@@ -23,7 +24,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    Account.register(scanner);
+                    Account.startRegistration(scanner);
                     break;
 
                 case 2:
@@ -40,6 +41,11 @@ public class Main {
                     System.out.println("Invalid choice! Please select again.");
             }
         }
+    }
+
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     // Staff menu
@@ -81,8 +87,8 @@ public class Main {
         while (true) {
             System.out.println("\n=== Guest Menu ===");
             System.out.println("1. Update Profile");
-            System.out.println("2. Booking Menu"); 
-            System.out.println("3. Room Services"); 
+            System.out.println("2. Booking Menu");
+            System.out.println("3. Room Services");
             System.out.println("4. Payment Menu");
             System.out.println("5. Logout");
             System.out.print("Enter your choice: ");
@@ -203,11 +209,18 @@ public class Main {
                         System.out.println("Booking ID not found.");
                         break;
                     }
-                    // Create Payment for that booking
-                    Payment payment = new Payment(0.0, 0, toPay);
-                    payment.processPayment(scanner, paymentList);
-                    // Store payment
-                    paymentList.add(payment);
+                    // Check if the booking already has a payment
+                    Payment existingPayment = toPay.getPayment();
+                    if (existingPayment != null && existingPayment.getPaymentStatus().equalsIgnoreCase("Completed")) {
+                        System.out.println("This booking has already been paid. Payment cannot be made again.");
+                        return;
+                    }
+
+                    // Proceed if payment hasn't been made or is still pending
+                    Payment newPayment = new Payment(0.0, 0, toPay);
+                    toPay.setPayment(newPayment); // update booking
+                    newPayment.processPayment(scanner, paymentList);
+                    paymentList.add(newPayment);
                     break;
 
                 case 2:
@@ -228,19 +241,21 @@ public class Main {
 
     // Modified Room Service menu
     public static void roomServiceMenu(Scanner scanner, Booking booking) {
+        RoomService roomService = booking.getRoomService(); // Get existing RoomService object
+    
         while (true) {
             System.out.println("\n=== Room Service Menu ===");
             System.out.println("1. Order Room Service");
             System.out.println("2. Cancel Room Service");
-            System.out.println("3. Buy Breakfast Package");
-            System.out.println("4. Cancel Lunch Package");
-            System.out.println("5. View Room Service Status");
-            System.out.println("6. Back to Guest Menu");
+            System.out.println("3. Order Breakfast");
+            System.out.println("4. Cancel Breakfast");
+            System.out.println("5. Add Fee to Booking Payment");
+            System.out.println("6. View Room Service Status");
+            System.out.println("7. Back to Guest Menu");
             System.out.print("Enter your choice: ");
-            RoomService roomService = new RoomService(booking); // Pass selected booking here
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
-
+    
             switch (choice) {
                 case 1:
                     roomService.callRoomService();
@@ -255,11 +270,13 @@ public class Main {
                     roomService.cancelBreakfast();
                     break;
                 case 5:
-                    roomService.displayServiceStatus();
+                    roomService.addFeeToPayment();
                     break;
                 case 6:
-                    return; 
-
+                    roomService.displayServiceStatus();
+                    break;
+                case 7:
+                    return;
                 default:
                     System.out.println("Invalid choice!");
             }

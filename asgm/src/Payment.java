@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,23 +12,21 @@ public class Payment {
 
     public Payment() {
         this.amount = 0.0;
-        this.paymentMethod = 0; // Default payment method
+        this.paymentMethod = 0;
         this.totalPrice = 0.0;
-        this.paymentStatus = "Pending"; // Initial payment status is "Pending"
-        this.booking = null; // No booking associated initially
+        this.paymentStatus = "Pending";
+        this.booking = null;
     }
 
-    // Constructor
     public Payment(double amount, int paymentMethod, Booking booking) {
         this.amount = amount;
         this.paymentMethod = paymentMethod;
         this.booking = booking;
-        this.totalPrice = booking.getTotalPrice();  // Payment amount based on booking's total price
-        this.paymentStatus = "Pending";  // Initial payment status is "Pending"
-        paymentId++;  // Auto-increment payment ID
+        this.totalPrice = booking.getTotalPrice();
+        this.paymentStatus = "Pending";
+        paymentId++;
     }
 
-    // Getters
     public double getAmount() {
         return amount;
     }
@@ -56,61 +55,68 @@ public class Payment {
         this.totalPrice = totalPrice;
     }
 
-    // Setters
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 
-    // Process payment function
     public void processPayment(Scanner scanner, ArrayList<Payment> paymentList) {
-        System.out.println("\n=== Payment Processing ===");
+        System.out.println("=== Payment Processing ===");
+
+        // Prevent re-payment
+        if (paymentStatus.equalsIgnoreCase("Completed")) {
+            System.out.println("This payment has already been completed. You cannot pay again.");
+            return;
+        } else if (paymentStatus.equalsIgnoreCase("Cancelled")) {
+            System.out.println("This payment has been cancelled. Please create a new booking to pay.");
+            return;
+        }
+
         System.out.println("Amount needs to be paid: RM " + totalPrice);
-        
+
         if (totalPrice == 0.0) {
             System.out.println("No payment can be processed. Please book a room first.");
             return;
         }
 
-        System.out.println("\nSelect your payment method:");
+        System.out.println("Select your payment method:");
         System.out.println("1. Cash");
         System.out.println("2. E-wallet");
         System.out.println("3. Card");
         System.out.print("Enter your choice (1-3): ");
         int paymentMethod = scanner.nextInt();
-        scanner.nextLine(); // Consume newline character
+        scanner.nextLine();
 
         this.paymentMethod = paymentMethod;
 
         switch (paymentMethod) {
             case 1:
-            Cash cash = new Cash(amount, paymentMethod, booking, 0.0);
-            cash.validateAmount();
-            break;
-        case 2:
-            EWallet eWallet = new EWallet(amount, paymentMethod, booking, "", 0);
-            eWallet.validateEWallet(scanner);
-            break;
-        case 3:
-            Card card = new Card(amount, paymentMethod, booking, "", "", "", "");
-            card.validateCard(scanner);
-            break;
+                Cash cash = new Cash(amount, paymentMethod, booking, 0.0);
+                cash.validateAmount();
+                break;
+            case 2:
+                EWallet eWallet = new EWallet(amount, paymentMethod, booking, "", 0);
+                eWallet.validateEWallet(scanner);
+                break;
+            case 3:
+                Card card = new Card(amount, paymentMethod, booking, "", "", "", "");
+                card.validateCard(scanner);
+                break;
             default:
                 System.out.println("Invalid payment method! Please select again.");
-                return;  // Return early in case of invalid choice
+                return;
         }
 
-        // After successful payment, update payment status and booking status
         paymentStatus = "Completed";
         booking.setPaymentStatus("Completed");
         booking.setBookingStatus("Confirmed");
-        System.out.println("\nPayment details:");
+
+        System.out.println("Payment details:");
         viewPaymentDetails();
     }
 
-    // Cancel payment function
     public void cancelPayment() {
-        System.out.println("\n=== Cancel Payment ===");
-        if(booking == null) {
+        System.out.println("=== Cancel Payment ===");
+        if (booking == null) {
             System.out.println("No booking found. Cannot cancel payment.");
             return;
         }
@@ -124,9 +130,8 @@ public class Payment {
         System.out.println("Payment cancelled! Booking cancelled.");
     }
 
-    // View Payment Details
     public void viewPaymentDetails() {
-        System.out.println("\n=== Payment Details ===");
+        System.out.println("=== Payment Details ===");
         System.out.println("Payment ID: " + getPaymentId());
         System.out.println("Amount: RM " + amount);
         System.out.println("Payment Method: " + (paymentMethod == 1 ? "Cash" : paymentMethod == 2 ? "E-wallet" : "Card"));
@@ -148,9 +153,8 @@ public class Payment {
         }
     }
 
-    // View Payments History
     public void viewPaymentsHistory(ArrayList<Payment> paymentList) {
-        System.out.println("\n=== Payments History ===");
+        System.out.println("=== Payments History ===");
         if (paymentList.isEmpty()) {
             System.out.println("No payments found.");
         } else {

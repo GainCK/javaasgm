@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Account {
+public abstract class Account {
     private String name;
     private String password;
     private String birthday;
@@ -13,8 +13,8 @@ public class Account {
     private String email;
     protected static List<Account> accountList = new ArrayList<>();
 
-
-    public Account() {};
+    public Account() {
+    }
 
     public Account(String name, String password, String birthday, String IC, String phoneNo, String email) {
         this.name = name;
@@ -25,23 +25,55 @@ public class Account {
         this.email = email;
     }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public abstract void displayAccountType();
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getName() {
+        return name;
+    }
 
-    public String getBirthday() { return birthday; }
-    public void setBirthday(String birthday) { this.birthday = birthday; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getIC() { return IC; }
-    public void setIC(String IC) { this.IC = IC; }
+    public String getPassword() {
+        return password;
+    }
 
-    public String getPhoneNo() { return phoneNo; }
-    public void setPhoneNo(String phoneNo) { this.phoneNo = phoneNo; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getIC() {
+        return IC;
+    }
+
+    public void setIC(String IC) {
+        this.IC = IC;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public void updateProfile(String name, String password, String birthday, String IC, String phoneNo, String email) {
         this.name = name;
@@ -76,41 +108,76 @@ public class Account {
     public void logout() {
         System.out.println(this.name + " has logged out.");
     }
+
     public static boolean isValidIC(String ic) {
-        String regex = "^[0-9]+$"; // Only numbers
+        String regex = "^[0-9]+$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(ic);
         return matcher.matches();
     }
 
     public static boolean isValidPhoneNo(String phoneNo) {
-        String regex = "^[0-9]+$"; // Only numbers
+        String regex = "^[0-9]+$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(phoneNo);
         return matcher.matches();
     }
 
     public static boolean isValidBirthday(String birthday) {
-        String regex = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/([0-9]{4})$"; // dd/mm/yyyy format
+        String regex = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/([0-9]{4})$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(birthday);
         return matcher.matches();
     }
 
     public static boolean isValidEmail(String email) {
-        String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"; // Valid email format
+        String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
 
-    // Register method with validation
-    public static void register(Scanner scanner) {
-        System.out.println("\n=== Register ===");
+    public static void startRegistration(Scanner scanner) {
+        System.out.println("\n=== Account Type Selection ===");
+        System.out.println("1. Guest");
+        System.out.println("2. Staff");
+        System.out.print("Enter choice: ");
+        String choice = scanner.nextLine();
+
+        if (choice.equals("1")) {
+            registerGuest(scanner);
+        } else if (choice.equals("2")) {
+            registerStaff(scanner);
+        } else {
+            System.out.println("Invalid choice. Returning to main menu.");
+        }
+    }
+
+    private static void registerGuest(Scanner scanner) {
+        System.out.println("\n=== Guest Registration ===");
+        String[] details = collectUserDetails(scanner);
+        Guest guest = new Guest(details[0], details[1], details[2], details[3], details[4], details[5]);
+        guest.register(guest);
+        System.out.println("Guest registration completed!");
+        printAccountList();
+    }
+
+    private static void registerStaff(Scanner scanner) {
+        System.out.println("\n=== Staff Registration ===");
+        String[] details = collectUserDetails(scanner);
+        Staff staff = new Staff(details[0], details[1], details[2], details[3], details[4], details[5]);
+        staff.register(staff);
+        System.out.println("Staff registration completed!");
+        printAccountList();
+    }
+
+    private static String[] collectUserDetails(Scanner scanner) {
         System.out.print("Enter Name: ");
         String name = scanner.nextLine();
+
         System.out.print("Enter Password: ");
         String password = scanner.nextLine();
+
         System.out.print("Enter Birthday (dd/mm/yyyy): ");
         String birthday = scanner.nextLine();
         while (!isValidBirthday(birthday)) {
@@ -118,7 +185,7 @@ public class Account {
             System.out.print("Enter Birthday (dd/mm/yyyy): ");
             birthday = scanner.nextLine();
         }
-        
+
         System.out.print("Enter IC (numbers only): ");
         String IC = scanner.nextLine();
         while (!isValidIC(IC)) {
@@ -126,7 +193,7 @@ public class Account {
             System.out.print("Enter IC (numbers only): ");
             IC = scanner.nextLine();
         }
-        
+
         System.out.print("Enter Phone No (numbers only): ");
         String phoneNo = scanner.nextLine();
         while (!isValidPhoneNo(phoneNo)) {
@@ -134,41 +201,18 @@ public class Account {
             System.out.print("Enter Phone No (numbers only): ");
             phoneNo = scanner.nextLine();
         }
-        
-        System.out.print("Enter Email (e.g., username@domain.com): ");
+
+        System.out.print("Enter Email: ");
         String email = scanner.nextLine();
         while (!isValidEmail(email)) {
             System.out.println("Invalid Email format! Please enter a valid email (e.g., username@domain.com).");
-            System.out.print("Enter Email: ");
+            System.out.print("Enter Email (e.g., username@domain.com): ");
             email = scanner.nextLine();
         }
 
-  // Determine if it's a Guest or Staff
-    System.out.print("Enter Hidden Password (leave blank if Guest): ");
-    String HP = scanner.nextLine();
-
-// The hidden password to become Staff
-    String hiddenStaffPassword = "5112155112"; 
-
-    if (HP.isEmpty()) {
-         Guest newGuest = new Guest(name, password, birthday, IC, phoneNo, email);
-         newGuest.register(newGuest);
-         System.out.println("Guest registration completed!");
-    } else if (HP.equals(hiddenStaffPassword)) {
-         Staff newStaff = new Staff(name, password, birthday, IC, phoneNo, email);
-        newStaff.register(newStaff);
-        System.out.println("Staff registration completed!");
-    } else {
-        System.out.println("Incorrect hidden password. Registering as Guest by default.");
-        Guest newGuest = new Guest(name, password, birthday, IC, phoneNo, email);
-        newGuest.register(newGuest);
-        System.out.println("Guest registration completed!");
+        return new String[] { name, password, birthday, IC, phoneNo, email };
     }
 
-
-        // Debugging: Print all accounts
-        printAccountList();
-    }
     public static void login(Scanner scanner) {
         System.out.println("\n=== Login ===");
         System.out.print("Enter your Name: ");
@@ -183,6 +227,7 @@ public class Account {
                 break;
             }
         }
+
         if (user == null) {
             System.out.println("Invalid credentials. Returning to main menu.");
             return;
@@ -196,16 +241,12 @@ public class Account {
             Main.guestMenu(scanner, (Guest) user);
         }
     }
+
     public static void printAccountList() {
         System.out.println("\n=== Current Account List ===");
         for (Account acc : Account.accountList) {
-            if (acc instanceof Staff) {
-                System.out.println("Staff");
-                System.out.println("---------------------------");
-            } else {
-                System.out.println("Guest");
-                System.out.println("---------------------------");
-            }
+            acc.displayAccountType();
+            System.out.println("---------------------------");
             System.out.println("Name: " + acc.getName());
             System.out.println("Password: " + acc.getPassword());
             System.out.println("Birthday: " + acc.getBirthday());
@@ -215,18 +256,19 @@ public class Account {
             System.out.println("---------------------------");
         }
     }
-     // Update profile method
-     public static void updateProfile(Scanner scanner, Account loggedIn) {
+
+    public static void updateProfile(Scanner scanner, Account loggedIn) {
         System.out.println("\n=== Update Your Profile ===");
 
-        // Get and confirm new details
         System.out.print("New Name (leave blank to keep current): ");
         String newName = scanner.nextLine();
-        if (!newName.isEmpty()) loggedIn.setName(newName);
+        if (!newName.isEmpty())
+            loggedIn.setName(newName);
 
         System.out.print("New Password (leave blank to keep current): ");
         String newPassword = scanner.nextLine();
-        if (!newPassword.isEmpty()) loggedIn.setPassword(newPassword);
+        if (!newPassword.isEmpty())
+            loggedIn.setPassword(newPassword);
 
         System.out.print("New Birthday (dd/mm/yyyy, leave blank to keep current): ");
         String newBirthday = scanner.nextLine();
@@ -234,7 +276,6 @@ public class Account {
             loggedIn.setBirthday(newBirthday);
         }
 
-        // Do not allow IC to be changed
         System.out.println("You cannot change your IC.");
 
         System.out.print("New Phone No (leave blank to keep current): ");
@@ -250,8 +291,6 @@ public class Account {
         }
 
         System.out.println("Profile updated successfully!");
-
-        // Debugging: Print updated account list
         printAccountList();
     }
 }

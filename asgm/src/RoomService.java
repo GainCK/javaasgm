@@ -25,8 +25,6 @@ public class RoomService {
         this(null);
     }
 
-  
-
     public Payment getPayment()    {
         return payment;
     }

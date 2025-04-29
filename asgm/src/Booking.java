@@ -99,6 +99,10 @@ public class Booking {
         return payment;
     }
 
+    public RoomService getRoomService() {
+        return roomService;
+    }
+
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
@@ -128,72 +132,63 @@ public class Booking {
     public static void createBooking(Scanner scanner, ArrayList<Booking> bookingList, Guest guest) {
         System.out.println("\n--- Create Booking ---");
     
-        System.out.println("\nSelect Room Type:");
-        System.out.println("1. Single Room - RM 200 per night");
-        System.out.println("2. Double Room - RM 350 per night");
-        System.out.println("3. Deluxe Room - RM 500 per night");
-        System.out.print("Enter your choice (1-3): ");
-        int roomChoice = scanner.nextInt();
-        scanner.nextLine();
+        Room room = null;
+        while (room == null) {
+            System.out.println("\nSelect Room Type:");
+            System.out.println("1. Single Room - RM 200 per night");
+            System.out.println("2. Double Room - RM 350 per night");
+            System.out.println("3. Deluxe Room - RM 500 per night");
+            System.out.print("Enter your choice (1-3): ");
+            int roomChoice = scanner.nextInt();
+            scanner.nextLine(); // consume newline
     
-        Room room;
-        switch (roomChoice) {
-            case 1:
-                room = new Room("Single", 200);
-                break;
-            case 2:
-                room = new Room("Double", 350);
-                break;
-            case 3:
-                room = new Room("Deluxe", 500);
-                break;
-            default:
-                System.out.println("Invalid choice! Defaulting to Single Room.");
-                room = new Room("Single", 200);
+            switch (roomChoice) {
+                case 1: room = new Room("Single", 200); break;
+                case 2: room = new Room("Double", 350); break;
+                case 3: room = new Room("Deluxe", 500); break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
         }
     
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate checkInDate = null;
+        LocalDate checkOutDate = null;
     
-        System.out.print("Enter check-in date (DD-MM-YYYY): ");
-        String checkInStr = scanner.nextLine();
-        if (!checkInStr.matches("\\d{2}-\\d{2}-\\d{4}")) {
-            System.out.println("Invalid date format. Please use DD-MM-YYYY with dashes.");
-            return;
+        while (true) {
+            System.out.print("Enter check-in date (DD-MM-YYYY): ");
+            String checkInStr = scanner.nextLine();
+            System.out.print("Enter check-out date (DD-MM-YYYY): ");
+            String checkOutStr = scanner.nextLine();
+    
+            try {
+                checkInDate = LocalDate.parse(checkInStr, formatter);
+                checkOutDate = LocalDate.parse(checkOutStr, formatter);
+    
+                long daysBooked = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+    
+                if (daysBooked <= 0) {
+                    System.out.println("Error: Check-out date must be after check-in date. Try again.");
+                } else {
+                    double totalPrice = room.getPrice() * daysBooked;
+                    String newBookingID = "B" + bookingCounter++;
+    
+                    Booking newBooking = new Booking(newBookingID, guest, room, checkInStr, checkOutStr, totalPrice);
+                    bookingList.add(newBooking);
+    
+                    Payment newPayment = new Payment(newBooking.getTotalPrice(), 0, newBooking);
+                    newBooking.setPayment(newPayment);
+    
+                    System.out.println("\nBooking created successfully!");
+                    System.out.println("Booking ID: " + newBookingID);
+                    System.out.println("Room Type: " + room.getRoomType());
+                    return;
+                }
+    
+            } catch (Exception e) {
+                System.out.println("Invalid date format. Please use DD-MM-YYYY.");
+            }
         }
-        System.out.print("Enter check-out date (DD-MM-YYYY): ");
-        String checkOutStr = scanner.nextLine();
-        if (!checkOutStr.matches("\\d{2}-\\d{2}-\\d{4}")) {
-            System.out.println("Invalid date format. Please use DD-MM-YYYY with dashes.");
-            return;
-        }
-    
-        // Convert to LocalDate
-        LocalDate checkInDate = LocalDate.parse(checkInStr, formatter);
-        LocalDate checkOutDate = LocalDate.parse(checkOutStr, formatter);
-    
-        // Calculate number of days booked
-        long daysBooked = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
-    
-        if (daysBooked <= 0) {
-            System.out.println("Error: Check-out date must be after check-in date.");
-            return;
-        }
-    
-        double totalPrice = room.getPrice() * daysBooked;
-        String newBookingID = "B" + bookingCounter++;
-    
-        // Use the passed Guest object instead of creating a new one
-        Booking newBooking = new Booking(newBookingID, guest, room, checkInStr, checkOutStr, totalPrice);
-    
-        bookingList.add(newBooking);
-    
-        // Create and connect Payment
-        Payment newPayment = new Payment(newBooking.getTotalPrice(), 0, newBooking);
-        newBooking.setPayment(newPayment); // This will also connect payment to room service
-    
-        System.out.println("\nBooking created successfully!");
-        System.out.println("Booking ID: " + newBookingID);
-        System.out.println("Room Type: " + room.getRoomType());
     }
 
     public static void cancelBooking(Scanner scanner, ArrayList<Booking> bookingList) {
