@@ -122,6 +122,9 @@ public class Booking {
 
     // Booking Operations
 
+  
+
+
     public static void createBooking(Scanner scanner, ArrayList<Booking> bookingList) {
         System.out.println("\n--- Create Booking ---");
         System.out.print("Enter customer name: ");
@@ -152,15 +155,26 @@ public class Booking {
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        
+
 
         System.out.print("Enter check-in date (DD-MM-YYYY): ");
         String checkInStr = scanner.nextLine();
+        if (!checkInStr.matches("\\d{2}-\\d{2}-\\d{4}")) {
+            System.out.println("Invalid date format. Please use DD-MM-YYYY with dashes.");
+            return;
+        }
         System.out.print("Enter check-out date (DD-MM-YYYY): ");
         String checkOutStr = scanner.nextLine();
+        if (!checkOutStr.matches("\\d{2}-\\d{2}-\\d{4}")) {
+            System.out.println("Invalid date format. Please use DD-MM-YYYY with dashes.");
+            return;
+        }
 
         // Convert to LocalDate
         LocalDate checkInDate = LocalDate.parse(checkInStr, formatter);
         LocalDate checkOutDate = LocalDate.parse(checkOutStr, formatter);
+       
 
         // Calculate number of days booked
         long daysBooked = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
