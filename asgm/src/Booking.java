@@ -125,11 +125,9 @@ public class Booking {
   
 
 
-    public static void createBooking(Scanner scanner, ArrayList<Booking> bookingList) {
+    public static void createBooking(Scanner scanner, ArrayList<Booking> bookingList, Guest guest) {
         System.out.println("\n--- Create Booking ---");
-        System.out.print("Enter customer name: ");
-        String custName = scanner.nextLine();
-
+    
         System.out.println("\nSelect Room Type:");
         System.out.println("1. Single Room - RM 200 per night");
         System.out.println("2. Double Room - RM 350 per night");
@@ -137,7 +135,7 @@ public class Booking {
         System.out.print("Enter your choice (1-3): ");
         int roomChoice = scanner.nextInt();
         scanner.nextLine();
-
+    
         Room room;
         switch (roomChoice) {
             case 1:
@@ -153,11 +151,9 @@ public class Booking {
                 System.out.println("Invalid choice! Defaulting to Single Room.");
                 room = new Room("Single", 200);
         }
-
+    
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        
-
-
+    
         System.out.print("Enter check-in date (DD-MM-YYYY): ");
         String checkInStr = scanner.nextLine();
         if (!checkInStr.matches("\\d{2}-\\d{2}-\\d{4}")) {
@@ -170,33 +166,31 @@ public class Booking {
             System.out.println("Invalid date format. Please use DD-MM-YYYY with dashes.");
             return;
         }
-
+    
         // Convert to LocalDate
         LocalDate checkInDate = LocalDate.parse(checkInStr, formatter);
         LocalDate checkOutDate = LocalDate.parse(checkOutStr, formatter);
-       
-
+    
         // Calculate number of days booked
         long daysBooked = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
-
+    
         if (daysBooked <= 0) {
             System.out.println("Error: Check-out date must be after check-in date.");
             return;
         }
-
+    
         double totalPrice = room.getPrice() * daysBooked;
         String newBookingID = "B" + bookingCounter++;
-        Guest guest = new Guest();
-        guest.setName(custName);
-
+    
+        // Use the passed Guest object instead of creating a new one
         Booking newBooking = new Booking(newBookingID, guest, room, checkInStr, checkOutStr, totalPrice);
-
+    
         bookingList.add(newBooking);
-
+    
         // Create and connect Payment
         Payment newPayment = new Payment(newBooking.getTotalPrice(), 0, newBooking);
         newBooking.setPayment(newPayment); // This will also connect payment to room service
-
+    
         System.out.println("\nBooking created successfully!");
         System.out.println("Booking ID: " + newBookingID);
         System.out.println("Room Type: " + room.getRoomType());

@@ -93,7 +93,7 @@ public class Main {
                     Account.updateProfile(scanner, guest);
                     break;
                 case 2:
-                    bookingMenu(scanner); // Booking menu only accessible for guests
+                    bookingMenu(scanner, guest); // Booking menu only accessible for guests
                     break;
 
                 case 3:
@@ -121,7 +121,7 @@ public class Main {
     }
 
     // Booking menu (Guest only)
-    public static void bookingMenu(Scanner scanner) {
+    public static void bookingMenu(Scanner scanner, Guest guest) {
         while (true) {
             System.out.println("\n=== Booking Menu ===");
             System.out.println("1. Create Booking");
@@ -135,7 +135,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    Booking.createBooking(scanner, bookingList);
+                    Booking.createBooking(scanner, bookingList, guest);
                     break;
                 case 2:
                     Booking.updateBooking(scanner, bookingList);
