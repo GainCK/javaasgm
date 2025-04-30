@@ -64,8 +64,8 @@ public class Payment {
     }
 
     public void processPayment(Scanner scanner, ArrayList<Payment> paymentList) {
-        System.out.println("=== Payment Processing ===");
-
+        System.out.println("\n=== Payment Processing ===");
+    
         if (paymentStatus.equalsIgnoreCase("Completed")) {
             System.out.println("This payment has already been completed. You cannot pay again.");
             return;
@@ -73,31 +73,33 @@ public class Payment {
             System.out.println("This payment has been cancelled. Please create a new booking to pay.");
             return;
         }
-
-        // ✅ Fetch and apply latest room service fee before processing
+    
+        // ✅ Apply pending room service fees
         RoomService roomService = booking.getRoomService();
         if (roomService != null) {
-            roomService.addFeeToPayment();  // updates totalPrice and amount
+            roomService.addFeeToPayment();  // Adds to totalPrice and amount
         }
-
-        // Show updated amount after service fee
-        System.out.println("Amount needs to be paid: RM " + totalPrice);
-
-        if (totalPrice == 0.0) {
+    
+        // ✅ Make sure amount reflects updated total
+        this.amount = this.totalPrice;
+    
+        System.out.println("Amount needs to be paid: RM " + amount);
+    
+        if (amount == 0.0) {
             System.out.println("No payment can be processed. Please book a room first.");
             return;
         }
-
-        System.out.println("Select your payment method:");
+    
+        System.out.println("\nSelect your payment method:");
         System.out.println("1. Cash");
         System.out.println("2. E-wallet");
         System.out.println("3. Card");
         System.out.print("Enter your choice (1-3): ");
         int paymentMethod = scanner.nextInt();
         scanner.nextLine();
-
+    
         this.paymentMethod = paymentMethod;
-
+    
         switch (paymentMethod) {
             case 1:
                 Cash cash = new Cash(amount, paymentMethod, booking, 0.0);
@@ -115,12 +117,12 @@ public class Payment {
                 System.out.println("Invalid payment method! Please select again.");
                 return;
         }
-
+    
         paymentStatus = "Completed";
         booking.setPaymentStatus("Completed");
         booking.setBookingStatus("Confirmed");
-
-        System.out.println("Payment details:");
+    
+        System.out.println("\nPayment details:");
         viewPaymentDetails();
     }
 
