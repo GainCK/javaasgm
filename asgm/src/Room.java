@@ -1,17 +1,18 @@
 public class Room {
-    private String roomId; // Change to String to match roomID format
+    private String roomId;
     private String roomType;
     private double price;
-    private boolean status;  
+    private boolean status;  // true = Available, false = Occupied
+    private String cleanlinessStatus = "Clean";
 
     public Room(String roomType, double price, String roomId) {
-        this.roomId = roomId; // Assign roomId from the parameter
+        this.roomId = roomId;
         this.roomType = roomType;
         this.price = price;
-        this.status = true;  
+        this.status = true;  // Initially available
     }
 
-    // Getters and Setters
+    // Getters
     public String getRoomId() {
         return roomId;
     }
@@ -28,6 +29,15 @@ public class Room {
         return status;
     }
 
+    public String getCleanlinessStatus() {
+        return cleanlinessStatus;
+    }
+
+    // Setters
+    public void setCleanlinessStatus(String cleanlinessStatus) {
+        this.cleanlinessStatus = cleanlinessStatus;
+    }
+
     public void setRoomType(String roomType) {
         this.roomType = roomType;
     }
@@ -40,10 +50,10 @@ public class Room {
         this.status = status;
     }
 
-    // Methods to change room status
+    // Status changes
     public void checkIn() {
-        if (status) { 
-            status = false;  // Change to occupied
+        if (status) {
+            status = false; // Mark as occupied
             System.out.println("Room " + roomId + " is now occupied.");
         } else {
             System.out.println("Room " + roomId + " is already occupied.");
@@ -51,19 +61,21 @@ public class Room {
     }
 
     public void checkOut() {
-        if (!status) { 
-            status = true;  // Change to available
-            System.out.println("Room " + roomId + " is now available.");
+        if (!status) {
+            status = true; // Mark as available
+            cleanlinessStatus = "Dirty"; // Auto-set as dirty after checkout
+            System.out.println("Room " + roomId + " has been checked out. Room marked as Dirty.");
         } else {
             System.out.println("Room " + roomId + " is already available.");
         }
     }
 
-    // Display room info
+    // Display info
     public void displayRoom() {
         System.out.println("Room ID: " + roomId +
                            ", Room Type: " + roomType +
                            ", Price: RM " + price +
-                           ", Status: " + (status ? "Available" : "Not Available"));
+                           ", Status: " + (status ? "Available" : "Occupied") +
+                           ", Cleanliness: " + cleanlinessStatus);
     }
 }

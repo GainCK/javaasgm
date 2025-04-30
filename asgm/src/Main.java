@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Main {
     // Declare globally so all methods can use it
-    static final String[] ROOM_TYPES = {"Single", "Double", "Deluxe"};
-static final int[] ROOM_PRICES = {200, 350, 500};
-static final int ROOM_COUNT = 3;
+    static final String[] ROOM_TYPES = { "Single", "Double", "Deluxe" };
+    static final int[] ROOM_PRICES = { 200, 350, 500 };
+    static final int ROOM_COUNT = 3;
     static ArrayList<Booking> bookingList = new ArrayList<>();
     static ArrayList<Room> roomList = new ArrayList<>();
     static ArrayList<Payment> paymentList = new ArrayList<>();
@@ -59,9 +59,11 @@ static final int ROOM_COUNT = 3;
             System.out.println("\n=== Staff Menu ===");
             System.out.println("1. Check In Room");
             System.out.println("2. Check Out Room");
-            System.out.println("3. Generate Report");
-            System.out.println("4. Update Profile");
-            System.out.println("5. Logout");
+            System.out.println("3. View All Room Status");
+            System.out.println("4. Housekeeping");
+            System.out.println("5. Generate Report");
+            System.out.println("6. Update Profile");
+            System.out.println("7. Logout");
             System.out.print("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -73,17 +75,22 @@ static final int ROOM_COUNT = 3;
                     staff.checkOutRoom(scanner);
                     break;
                 case 3:
-                    staff.generateReport();
+                    staff.viewAllRoomStatus();
                     break;
                 case 4:
-                    Account.updateProfile(scanner, staff);
+                    staff.updateRoomCleanliness(scanner);
                     break;
                 case 5:
+                    staff.generateReport();
+                    break;
+                case 6:
+                    Account.updateProfile(scanner, staff);
+                    break;
+                case 7:
                     staff.logout();
                     return;
                 default:
                     System.out.println("Invalid choice! Please select again.");
-                    continue;
             }
         }
     }
@@ -132,7 +139,7 @@ static final int ROOM_COUNT = 3;
             }
         }
     }
-    
+
     public static void initializeRooms() {
         for (int i = 1; i <= ROOM_COUNT; i++) {
             for (int j = 0; j < ROOM_TYPES.length; j++) {
@@ -141,6 +148,7 @@ static final int ROOM_COUNT = 3;
             }
         }
     }
+
     // Booking menu (Guest only)
     public static void bookingMenu(Scanner scanner, Guest guest) {
         while (true) {
@@ -156,7 +164,8 @@ static final int ROOM_COUNT = 3;
 
             switch (choice) {
                 case 1:
-                Booking.createBooking(scanner, bookingList, guest, roomList);                    break;
+                    Booking.createBooking(scanner, bookingList, guest, roomList);
+                    break;
                 case 2:
                     Booking.updateBooking(scanner, bookingList);
                     break;
@@ -175,7 +184,6 @@ static final int ROOM_COUNT = 3;
         }
     }
 
- 
     public static void paymentMenu(Scanner scanner) {
         while (true) {
             System.out.println("\n=== Payment Menu ===");
@@ -242,7 +250,7 @@ static final int ROOM_COUNT = 3;
     // Modified Room Service menu
     public static void roomServiceMenu(Scanner scanner, Booking booking) {
         RoomService roomService = booking.getRoomService(); // Get existing RoomService object
-    
+
         while (true) {
             System.out.println("\n=== Room Service Menu ===");
             System.out.println("1. Order Room Service");
@@ -255,7 +263,7 @@ static final int ROOM_COUNT = 3;
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
-    
+
             switch (choice) {
                 case 1:
                     roomService.callRoomService();

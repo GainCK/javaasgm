@@ -15,123 +15,53 @@ public class Booking {
     private String bookingStatus;
     private Payment payment;
     private Guest guest;
-    private RoomService roomService; // Will be linked properly
+    private RoomService roomService;
     private static int bookingCounter = 1;
 
-    public Booking(String bookingID, Guest guest, Room roomType, String checkInDate, String checkOutDate,
-            double totalPrice) {
+    public Booking(String bookingID, Guest guest, Room roomType, String checkInDate, String checkOutDate, double totalPrice) {
         this.bookingID = bookingID;
         this.guest = guest;
-        this.custName = guest.getName(); // keep custName in sync for backward compatibility
+        this.custName = guest.getName();
         this.roomType = roomType;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-        this.totalPrice = totalPrice; // use calculated price
+        this.totalPrice = totalPrice;
         this.paymentStatus = "Pending";
         this.bookingStatus = "Confirmed";
         this.roomService = new RoomService(this);
     }
 
-    // Call room service for this booking
-    public void callRoomService() {
-        roomService.callRoomService();
-    }
+    public void callRoomService() { roomService.callRoomService(); }
+    public void cancelRoomService() { roomService.cancelRoomService(); }
+    public void orderBreakfast() { roomService.buyBreakfast(); }
+    public void cancelBreakfast() { roomService.cancelBreakfast(); }
+    public void addRoomServiceFeeToPayment() { roomService.addFeeToPayment(); }
+    public void displayRoomServiceStatus() { roomService.displayServiceStatus(); }
 
-    public void cancelRoomService() {
-        roomService.cancelRoomService();
-    }
+    public Guest getGuest() { return guest; }
+    public String getBookingID() { return bookingID; }
+    public String getCustName() { return custName; }
+    public Room getRoomType() { return roomType; }
+    public String getCheckInDate() { return checkInDate; }
+    public String getCheckOutDate() { return checkOutDate; }
+    public double getTotalPrice() { return totalPrice; }
+    public String getPaymentStatus() { return paymentStatus; }
+    public String getBookingStatus() { return bookingStatus; }
+    public Payment getPayment() { return payment; }
+    public RoomService getRoomService() { return roomService; }
 
-    public void orderBreakfast() {
-        roomService.buyBreakfast();
-    }
-
-    public void cancelBreakfast() {
-        roomService.cancelBreakfast();
-    }
-
-    public void addRoomServiceFeeToPayment() {
-        roomService.addFeeToPayment();
-    }
-
-    public void displayRoomServiceStatus() {
-        roomService.displayServiceStatus();
-    }
-
-    // Getters and Setters
-
-    public Guest getGuest() {
-        return guest;
-    }
-
-    public String getBookingID() {
-        return bookingID;
-    }
-
-    public String getCustName() {
-        return custName;
-    }
-
-    public Room getRoomType() {
-        return roomType;
-    }
-
-    public String getCheckInDate() {
-        return checkInDate;
-    }
-
-    public String getCheckOutDate() {
-        return checkOutDate;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public String getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public String getBookingStatus() {
-        return bookingStatus;
-    }
-
-    public Payment getPayment() {
-        return payment;
-    }
-
-    public RoomService getRoomService() {
-        return roomService;
-    }
-
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    public void setBookingStatus(String bookingStatus) {
-        this.bookingStatus = bookingStatus;
-    }
-
-    public void setCheckInDate(String checkInDate) {
-        this.checkInDate = checkInDate;
-    }
-
-    public void setCheckOutDate(String checkOutDate) {
-        this.checkOutDate = checkOutDate;
-    }
-
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+    public void setBookingStatus(String bookingStatus) { this.bookingStatus = bookingStatus; }
+    public void setCheckInDate(String checkInDate) { this.checkInDate = checkInDate; }
+    public void setCheckOutDate(String checkOutDate) { this.checkOutDate = checkOutDate; }
     public void setPayment(Payment payment) {
         this.payment = payment;
-        this.roomService.connectPayment(payment); // Connect the payment to RoomService
+        this.roomService.connectPayment(payment);
     }
-
-    // Booking Operations
-
-  
-
 
     public static void createBooking(Scanner scanner, ArrayList<Booking> bookingList, Guest guest, ArrayList<Room> roomList) {
         System.out.println("\n--- Create Booking ---");
-    
+
         Room room = null;
         while (room == null) {
             System.out.println("\nSelect Room Type:");
@@ -140,75 +70,63 @@ public class Booking {
             System.out.println("3. Deluxe Room - RM 500 per night");
             System.out.print("Enter your choice (1-3): ");
             int roomChoice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
-    
+            scanner.nextLine();
+
             String roomType = null;
             switch (roomChoice) {
-                case 1:
-                    roomType = "Single";
-                    break;
-                case 2:
-                    roomType = "Double";
-                    break;
-                case 3:
-                    roomType = "Deluxe";
-                    break;
-                default:
+                case 1 -> roomType = "Single";
+                case 2 -> roomType = "Double";
+                case 3 -> roomType = "Deluxe";
+                default -> {
                     System.out.println("Invalid choice. Please try again.");
                     continue;
+                }
             }
-    
-            // Find an available room of the selected type
+
             for (Room r : roomList) {
                 if (r.getRoomType().equalsIgnoreCase(roomType) && r.isAvailable()) {
                     room = r;
                     break;
                 }
             }
-    
+
             if (room == null) {
                 System.out.println("No available rooms of the selected type. Please choose a different type.");
                 return;
             }
         }
-    
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate checkInDate = null;
-        LocalDate checkOutDate = null;
-    
+        LocalDate checkInDate, checkOutDate;
+
         while (true) {
             System.out.print("Enter check-in date (DD-MM-YYYY): ");
             String checkInStr = scanner.nextLine();
             System.out.print("Enter check-out date (DD-MM-YYYY): ");
             String checkOutStr = scanner.nextLine();
-    
+
             try {
                 checkInDate = LocalDate.parse(checkInStr, formatter);
                 checkOutDate = LocalDate.parse(checkOutStr, formatter);
-    
                 long daysBooked = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
-    
+
                 if (daysBooked <= 0) {
                     System.out.println("Error: Check-out date must be after check-in date. Try again.");
                 } else {
                     double totalPrice = room.getPrice() * daysBooked;
                     String newBookingID = "B" + bookingCounter++;
-    
                     Booking newBooking = new Booking(newBookingID, guest, room, checkInStr, checkOutStr, totalPrice);
                     bookingList.add(newBooking);
-    
+
                     Payment newPayment = new Payment(newBooking.getTotalPrice(), 0, newBooking);
                     newBooking.setPayment(newPayment);
-    
-                    // Mark the room as unavailable
-                    room.setAvailable(false);
-    
+                    room.setAvailable(false); // reserve the room
+
                     System.out.println("\nBooking created successfully!");
                     System.out.println("Booking ID: " + newBookingID);
                     System.out.println("Room Type: " + room.getRoomType());
                     return;
                 }
-    
             } catch (Exception e) {
                 System.out.println("Invalid date format. Please use DD-MM-YYYY.");
             }
@@ -253,7 +171,6 @@ public class Booking {
                 booking.setCheckInDate(newCheckIn);
                 booking.setCheckOutDate(newCheckOut);
                 booking.totalPrice = booking.getRoomType().getPrice() * newDaysBooked;
-
                 System.out.println("Booking " + bookingID + " updated successfully.");
                 return;
             }
@@ -284,27 +201,28 @@ public class Booking {
         System.out.println("Booking Status: " + bookingStatus);
     }
 
+    // ✅ Fixed checkIn logic
     public void checkIn() {
-        if (roomType.isAvailable()) {
-            roomType.checkIn();
+        if (bookingStatus.equalsIgnoreCase("Confirmed")) {
+            roomType.checkIn(); // still mark as occupied
             bookingStatus = "Checked-In";
             System.out.println("Booking " + bookingID + " has been checked in.");
         } else {
-            System.out.println("Room " + roomType.getRoomId() + " is not available for check-in.");
+            System.out.println("Cannot check in. Current booking status: " + bookingStatus);
         }
     }
 
     public void checkOut() {
         if (!roomType.isAvailable()) {
-            roomType.checkOut();
+            roomType.checkOut(); // sets room available = true
+            roomType.setCleanlinessStatus("Dirty");
             bookingStatus = "Checked-Out";
-            System.out.println("Booking " + bookingID + " has been checked out.");
+            System.out.println("Booking " + bookingID + " has been checked out. Room marked as Dirty.");
         } else {
             System.out.println("Room " + roomType.getRoomId() + " is already available.");
         }
     }
 
-    // New method to get bookings for a guest
     public static ArrayList<Booking> getBookingsForGuest(Guest guest, ArrayList<Booking> bookingList) {
         ArrayList<Booking> guestBookings = new ArrayList<>();
         for (Booking booking : bookingList) {
