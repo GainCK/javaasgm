@@ -39,6 +39,7 @@ public class Main {
 
                 default:
                     System.out.println("Invalid choice! Please select again.");
+                    continue;
             }
         }
     }
@@ -78,6 +79,7 @@ public class Main {
                     return;
                 default:
                     System.out.println("Invalid choice! Please select again.");
+                    continue;
             }
         }
     }
@@ -122,6 +124,7 @@ public class Main {
                     return;
                 default:
                     System.out.println("Invalid choice! Please select again.");
+                    continue;
             }
         }
     }
@@ -156,6 +159,7 @@ public class Main {
                     return; // Back to Guest Menu
                 default:
                     System.out.println("Invalid choice!");
+                    continue;
             }
         }
     }
@@ -235,6 +239,7 @@ public class Main {
                     return; // Back to Guest Menu
                 default:
                     System.out.println("Invalid choice!");
+                    continue;
             }
         }
     }
@@ -279,6 +284,7 @@ public class Main {
                     return;
                 default:
                     System.out.println("Invalid choice!");
+                    continue;
             }
         }
     }
