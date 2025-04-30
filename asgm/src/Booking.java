@@ -129,7 +129,7 @@ public class Booking {
   
 
 
-    public static void createBooking(Scanner scanner, ArrayList<Booking> bookingList, Guest guest) {
+    public static void createBooking(Scanner scanner, ArrayList<Booking> bookingList, Guest guest, ArrayList<Room> roomList) {
         System.out.println("\n--- Create Booking ---");
     
         Room room = null;
@@ -142,12 +142,33 @@ public class Booking {
             int roomChoice = scanner.nextInt();
             scanner.nextLine(); // consume newline
     
+            String roomType = null;
             switch (roomChoice) {
-                case 1: room = new Room("Single", 200); break;
-                case 2: room = new Room("Double", 350); break;
-                case 3: room = new Room("Deluxe", 500); break;
+                case 1:
+                    roomType = "Single";
+                    break;
+                case 2:
+                    roomType = "Double";
+                    break;
+                case 3:
+                    roomType = "Deluxe";
+                    break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
+                    continue;
+            }
+    
+            // Find an available room of the selected type
+            for (Room r : roomList) {
+                if (r.getRoomType().equalsIgnoreCase(roomType) && r.isAvailable()) {
+                    room = r;
+                    break;
+                }
+            }
+    
+            if (room == null) {
+                System.out.println("No available rooms of the selected type. Please choose a different type.");
+                return;
             }
         }
     
@@ -178,6 +199,9 @@ public class Booking {
     
                     Payment newPayment = new Payment(newBooking.getTotalPrice(), 0, newBooking);
                     newBooking.setPayment(newPayment);
+    
+                    // Mark the room as unavailable
+                    room.setAvailable(false);
     
                     System.out.println("\nBooking created successfully!");
                     System.out.println("Booking ID: " + newBookingID);

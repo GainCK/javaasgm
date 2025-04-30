@@ -4,11 +4,15 @@ import java.util.List;
 
 public class Main {
     // Declare globally so all methods can use it
+    static final String[] ROOM_TYPES = {"Single", "Double", "Deluxe"};
+static final int[] ROOM_PRICES = {200, 350, 500};
+static final int ROOM_COUNT = 3;
     static ArrayList<Booking> bookingList = new ArrayList<>();
     static ArrayList<Room> roomList = new ArrayList<>();
     static ArrayList<Payment> paymentList = new ArrayList<>();
 
     public static void main(String[] args) {
+        initializeRooms();
         Scanner scanner = new Scanner(System.in);
 
         // Main Menu Loop
@@ -128,7 +132,15 @@ public class Main {
             }
         }
     }
-
+    
+    public static void initializeRooms() {
+        for (int i = 1; i <= ROOM_COUNT; i++) {
+            for (int j = 0; j < ROOM_TYPES.length; j++) {
+                String roomID = ROOM_TYPES[j].substring(0, 1) + (j == 2 ? "L" : "") + i; // S1, D1, DL1
+                roomList.add(new Room(ROOM_TYPES[j], ROOM_PRICES[j], roomID));
+            }
+        }
+    }
     // Booking menu (Guest only)
     public static void bookingMenu(Scanner scanner, Guest guest) {
         while (true) {
@@ -144,8 +156,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    Booking.createBooking(scanner, bookingList, guest);
-                    break;
+                Booking.createBooking(scanner, bookingList, guest, roomList);                    break;
                 case 2:
                     Booking.updateBooking(scanner, bookingList);
                     break;
@@ -164,23 +175,7 @@ public class Main {
         }
     }
 
-    static {
-        // Add 3 Single Rooms
-        for (int j = 0; j < 3; j++) {
-            roomList.add(new Room("Single", 200));
-        }
-
-        // Add 3 Double Rooms
-        for (int k = 0; k < 3; k++) {
-            roomList.add(new Room("Double", 350));
-        }
-
-        // Add 3 Deluxe Rooms
-        for (int l = 0; l < 3; l++) {
-            roomList.add(new Room("Deluxe", 500));
-        }
-    }
-
+ 
     public static void paymentMenu(Scanner scanner) {
         while (true) {
             System.out.println("\n=== Payment Menu ===");

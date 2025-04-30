@@ -1,21 +1,18 @@
 public class Room {
-    private int roomId;    
+    private String roomId; // Change to String to match roomID format
     private String roomType;
     private double price;
     private boolean status;  
-    private static int roomCount = 1001;
 
-
-    public Room(String roomType, double price) {
-        this.roomId = roomCount++;
+    public Room(String roomType, double price, String roomId) {
+        this.roomId = roomId; // Assign roomId from the parameter
         this.roomType = roomType;
         this.price = price;
         this.status = true;  
-       
     }
 
     // Getters and Setters
-    public int getRoomId() {
+    public String getRoomId() {
         return roomId;
     }
 
@@ -31,8 +28,6 @@ public class Room {
         return status;
     }
 
- 
-
     public void setRoomType(String roomType) {
         this.roomType = roomType;
     }
@@ -44,8 +39,6 @@ public class Room {
     public void setAvailable(boolean status) {
         this.status = status;
     }
-
- 
 
     // Methods to change room status
     public void checkIn() {
