@@ -2,12 +2,16 @@ import java.util.Scanner;
 
 public class Staff extends Account {
 
+    private Report report;
+
     public Staff() {
         super();
+      this.report = new Report(Main.bookingList);
     }
 
     public Staff(String name, String password, String birthday, String IC, String phoneNo, String email) {
         super(name, password, birthday, IC, phoneNo, email);
+        this.report = new Report(Main.bookingList);
     }
 
     @Override
@@ -60,7 +64,15 @@ public class Staff extends Account {
 
     public void generateReport() {
         System.out.println(getName() + " is generating a report.");
+        report.generateDailyReport();
+        report.generateRoomTypeAnalysis();
+        report.generateGuestReport();
+
     }
+
+    
+
+   
 
     public void updateStaffProfile() {
         System.out.println(getName() + " has updated their staff profile.");
