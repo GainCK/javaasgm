@@ -1,7 +1,8 @@
+
 public class RoomService {
     private Booking booking;
     private Payment payment;
-    private Guest guest; 
+    private Guest guest;
     private double fee;
     private boolean roomServiceActive;
     private boolean breakfastOrdered;
@@ -15,7 +16,7 @@ public class RoomService {
 
     public RoomService(Booking booking) {
         this.booking = booking;
-        this.guest = booking != null ? booking.getGuest() : null; // Initialize guest from booking
+        this.guest = booking != null ? booking.getGuest() : null;
         this.fee = 0.0;
         this.roomServiceActive = false;
         this.breakfastOrdered = false;
@@ -25,7 +26,7 @@ public class RoomService {
         this(null);
     }
 
-    public Payment getPayment()    {
+    public Payment getPayment() {
         return payment;
     }
 
@@ -37,24 +38,19 @@ public class RoomService {
         Room room = booking.getRoomType();
         if (guest == null || room == null) {
             System.out.println("Error: Guest or Room information is missing.");
-            return;}
+            return;
+        }
 
         if (!roomServiceActive) {
             roomServiceActive = true;
-            switch (room.getRoomType().toLowerCase()) {
-                case "deluxe":
-                    fee += deluxeRoomServiceFee;
-                    break;
-                case "double":
-                    fee += doubleRoomServiceFee;
-                    break;
-                case "single":
-                default:
-                    fee += singleRoomServiceFee;
-                    break;
-            }
+            double serviceFee = switch (room.getRoomType().toLowerCase()) {
+                case "deluxe" -> deluxeRoomServiceFee;
+                case "double" -> doubleRoomServiceFee;
+                default -> singleRoomServiceFee;
+            };
+            fee += serviceFee;
             totalRoomServiceCalls++;
-            totalRoomServiceFee += fee;
+            totalRoomServiceFee += serviceFee;
             System.out.println("Room service called. Fee updated.");
         } else {
             System.out.println("Room service is already active.");
@@ -65,23 +61,18 @@ public class RoomService {
         Room room = booking.getRoomType();
         if (guest == null || room == null) {
             System.out.println("Error: Guest or Room information is missing.");
-            return;        }
+            return;
+        }
 
         if (roomServiceActive) {
             roomServiceActive = false;
-            switch (room.getRoomType().toLowerCase()) {
-                case "deluxe":
-                    fee = Math.max(0.0, fee - deluxeRoomServiceFee);
-                    break;
-                case "double":
-                    fee = Math.max(0.0, fee - doubleRoomServiceFee);
-                    break;
-                case "single":
-                default:
-                    fee = Math.max(0.0, fee - singleRoomServiceFee);
-                    break;
-            }
-            totalRoomServiceFee = Math.max(0, totalRoomServiceFee - fee);
+            double serviceFee = switch (room.getRoomType().toLowerCase()) {
+                case "deluxe" -> deluxeRoomServiceFee;
+                case "double" -> doubleRoomServiceFee;
+                default -> singleRoomServiceFee;
+            };
+            fee = Math.max(0.0, fee - serviceFee);
+            totalRoomServiceFee = Math.max(0, totalRoomServiceFee - serviceFee);
             totalRoomServiceCalls = Math.max(0, totalRoomServiceCalls - 1);
             System.out.println("Room service cancelled.");
         } else {
@@ -93,7 +84,8 @@ public class RoomService {
         Room room = booking.getRoomType();
         if (guest == null || room == null) {
             System.out.println("Error: Guest or Room information is missing.");
-            return;        }
+            return;
+        }
         if (!breakfastOrdered) {
             breakfastOrdered = true;
             fee += breakfastFee;
@@ -109,7 +101,8 @@ public class RoomService {
         Room room = booking.getRoomType();
         if (guest == null || room == null) {
             System.out.println("Error: Guest or Room information is missing.");
-            return;        }
+            return;
+        }
         if (breakfastOrdered) {
             breakfastOrdered = false;
             fee = Math.max(0.0, fee - breakfastFee);
@@ -127,27 +120,29 @@ public class RoomService {
             System.out.println("No payment found for this booking.");
             return;
         }
-    
-        double oldTotal = payment.getTotalPrice();
-        double newTotal = oldTotal + fee;
-    
-        payment.setTotalPrice(newTotal);
-        payment.setAmount(newTotal);  // 💡 add this to reflect new amount
-    
-        System.out.printf("Fee of RM %.2f added to payment. New total: RM %.2f\n", fee, newTotal);
-        fee = 0.0;  // reset after applying
+        if (payment.getPaymentStatus().equalsIgnoreCase("Completed")) {
+            System.out.println("Payment already completed. Cannot add additional fees.");
+            return;
+        }
+
+        payment.setTotalPrice(payment.getTotalPrice() + fee);
+        payment.setAmount(payment.getAmount() + fee);
+        System.out.printf("Fee of RM %.2f added to payment. New total: RM %.2f%n", fee, payment.getTotalPrice());
+
+        fee = 0.0; // reset fee after applying
     }
 
     public void displayServiceStatus() {
         Room room = booking.getRoomType();
         if (guest == null || room == null) {
             System.out.println("Error: Guest or Room information is missing.");
-            return;        }
+            return;
+        }
         System.out.println("Room Service Status for Booking ID: " + booking.getBookingID());
-        System.out.println("- Room Type: " + booking.getRoomType().getRoomType());
+        System.out.println("- Room Type: " + room.getRoomType());
         System.out.println("- Room Service Active: " + (roomServiceActive ? "Yes" : "No"));
         System.out.println("- Breakfast Ordered: " + (breakfastOrdered ? "Yes" : "No"));
-        System.out.printf("- Current Additional Fee: RM %.2f\n", fee);
+        System.out.printf("- Current Additional Fee: RM %.2f%n", fee);
     }
 
     public static int getTotalRoomServiceCalls() {
