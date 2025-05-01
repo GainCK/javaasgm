@@ -250,7 +250,7 @@ public class Booking {
         System.out.println("Room Type: " + roomType.getRoomType());
         System.out.println("Check-In Date: " + checkInDate);
         System.out.println("Check-Out Date: " + checkOutDate);
-        System.out.println("Total Price: RM " + totalPrice);
+        System.out.printf("Total Price: RM %.2f%n" , totalPrice);
         System.out.println("Payment Status: " + paymentStatus);
         System.out.println("Booking Status: " + bookingStatus);
     }

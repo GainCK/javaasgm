@@ -100,7 +100,7 @@ public class Staff extends Account {
         System.out.println(getName() + " is generating a report.");
         report.generateDailyReport();
         report.generateRoomTypeAnalysis();
-        report.generateGuestReport();
+        report.generateGuestReport(Main.paymentList);
     }
 
     public void viewAllRoomStatus() {

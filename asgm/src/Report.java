@@ -98,36 +98,28 @@ public class Report {
        
     }
     
-    public void generateGuestReport() {
-        System.out.println("\n=== GUEST ACTIVITY REPORT ===");
-        System.out.printf("%-20s %-10s %-15s\n", "Guest Name", "Bookings", "Total Spent");
-        
-        // This would be more efficient with a Map, but keeping it simple
-        ArrayList<String> processedGuests = new ArrayList<>();
-        
-        for (Booking booking : bookings) {
-            String guestName = booking.getCustName();
-            if (!processedGuests.contains(guestName)) {
-                processedGuests.add(guestName);
-                int count = 0;
-                double total = 0;
-                
-                for (Booking b : bookings) {
-                    if (b.getCustName().equals(guestName)) {
-                        count++;
-                        total += b.getTotalPrice();
-
-                       
-                    }
-
-                    
-                }
-                
-                System.out.printf("%-20s %-10d %-15s\n",
-                    guestName,
-                    count,
-                    currencyFormat.format(total));
-            }
+    public void generateGuestReport(ArrayList<Payment> paymentList) {
+        System.out.println("\n=== Guest Payment Report ===");
+    
+        double grandTotal = 0.0;
+    
+        for (Payment payment : paymentList) {
+            Booking booking = payment.getBooking();
+            Guest guest = booking.getGuest();
+    
+            System.out.println("Guest Name: " + guest.getName());
+            System.out.println("Booking ID: " + booking.getBookingID());
+            System.out.printf("Room Price: RM %.2f%n", booking.getTotalPrice());
+    
+            double paidAmount = payment.getAmount();  // Already includes room service
+            System.out.printf("Total Paid (with Room Service): RM %.2f%n", paidAmount);
+            System.out.println("Payment Status: " + payment.getPaymentStatus());
+            System.out.println("-----------------------------");
+    
+            grandTotal += paidAmount;
         }
+    
+        System.out.printf("Grand Total (All Guests): RM %.2f%n", grandTotal);
     }
+    
 }
