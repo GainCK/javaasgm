@@ -126,21 +126,7 @@ public class Payment {
         viewPaymentDetails();
     }
 
-    public void cancelPayment() {
-        System.out.println("=== Cancel Payment ===");
-        if (booking == null) {
-            System.out.println("No booking found. Cannot cancel payment.");
-            return;
-        }
-        if (paymentStatus.equals("Completed")) {
-            System.out.println("Payment already completed. Cannot cancel.");
-            return;
-        }
-        paymentStatus = "Cancelled";
-        booking.setPaymentStatus("Cancelled");
-        booking.setBookingStatus("Cancelled");
-        System.out.println("Payment cancelled! Booking cancelled.");
-    }
+
 
     public void viewPaymentDetails() {
         System.out.println("=== Payment Details ===");

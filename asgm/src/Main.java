@@ -188,9 +188,8 @@ public class Main {
         while (true) {
             System.out.println("\n=== Payment Menu ===");
             System.out.println("1. Process Payment");
-            System.out.println("2. Cancel Payment");
-            System.out.println("3. View Payments History");
-            System.out.println("4. Back to Guest Menu");
+            System.out.println("2. View Payments History");
+            System.out.println("3. Back to Guest Menu");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
@@ -232,14 +231,10 @@ public class Main {
                     break;
 
                 case 2:
-                    new Payment().cancelPayment();
-                    break;
-
-                case 3:
                     new Payment().viewPaymentsHistory(paymentList);
                     break;
 
-                case 4:
+                case 3:
                     return; // Back to Guest Menu
                 default:
                     System.out.println("Invalid choice!");
@@ -258,9 +253,8 @@ public class Main {
             System.out.println("2. Cancel Room Service");
             System.out.println("3. Order Breakfast");
             System.out.println("4. Cancel Breakfast");
-            System.out.println("5. Add Fee to Booking Payment");
-            System.out.println("6. View Room Service Status");
-            System.out.println("7. Back to Guest Menu");
+            System.out.println("5. View Room Service Status");
+            System.out.println("6. Back to Guest Menu");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
@@ -279,12 +273,9 @@ public class Main {
                     roomService.cancelBreakfast();
                     break;
                 case 5:
-                    roomService.addFeeToPayment();
-                    break;
-                case 6:
                     roomService.displayServiceStatus();
                     break;
-                case 7:
+                case 6:
                     return;
                 default:
                     System.out.println("Invalid choice!");
@@ -295,13 +286,25 @@ public class Main {
 
     // Helper method to allow guest to select a booking
     public static Booking promptUserToSelectBooking(Scanner scanner, List<Booking> bookings) {
-        System.out.println("Select a booking:");
+        System.out.println("Select a booking (1-" + bookings.size() + "):");
         for (int i = 0; i < bookings.size(); i++) {
-            System.out.println((i + 1) + ". " + bookings.get(i).getBookingID() + " - " + bookings.get(i).getRoomType());
+            System.out.println((i + 1) + ". " + bookings.get(i).getBookingID());
         }
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-        return bookings.get(choice - 1);
+        int choice;
+        while (true) {
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+    
+            // Validate the user's choice
+            if (choice >= 1 && choice <= bookings.size()) {
+                break; // Valid choice
+            } else {
+                System.out.println("Invalid choice! Please select a number between 1 and " + bookings.size() + ".");
+            }
+        }
+    
+        return bookings.get(choice - 1); // Return the selected booking
     }
 
     // Method to fetch bookings for the guest (for simplicity, it's a stub)
