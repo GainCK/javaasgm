@@ -1,9 +1,14 @@
+//Author : Chuh Zhe Yong
+//Module : Room Service
+//System : Hotel Management System
+//Group  : DFT1G11
 
 public class RoomService {
     private Booking booking;
     private Payment payment;
     private Guest guest;
     private double fee;
+
     private boolean roomServiceActive;
     private boolean breakfastOrdered;
 
@@ -127,9 +132,9 @@ public class RoomService {
 
         payment.setTotalPrice(payment.getTotalPrice() + fee);
         payment.setAmount(payment.getAmount() + fee);
-        System.out.printf("Fee of RM %.2f added to payment. New total: RM %.2f%n", fee, payment.getTotalPrice());
+        System.out.printf("Fee of RM %.2f added to payment.\nNew total: RM %.2f%n", fee, payment.getTotalPrice());
 
-        fee = 0.0; // reset fee after applying
+        fee = 0.0; 
     }
 
     public void displayServiceStatus() {
@@ -152,4 +157,6 @@ public class RoomService {
     public static double getTotalRoomServiceFee() {
         return totalRoomServiceFee;
     }
+
+    
 }

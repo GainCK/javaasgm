@@ -116,7 +116,11 @@ public class Report {
                     if (b.getCustName().equals(guestName)) {
                         count++;
                         total += b.getTotalPrice();
+
+                       
                     }
+
+                    
                 }
                 
                 System.out.printf("%-20s %-10d %-15s\n",
