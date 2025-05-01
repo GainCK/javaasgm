@@ -72,8 +72,15 @@ public class Booking {
             System.out.println("2. Double Room - RM 350 per night");
             System.out.println("3. Deluxe Room - RM 500 per night");
             System.out.print("Enter your choice (1-3): ");
-            int roomChoice = scanner.nextInt();
-            scanner.nextLine();
+            String input = scanner.nextLine(); 
+            int roomChoice;
+
+            try {
+                roomChoice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number (1-5).");
+                continue;
+            }
     
             String roomType = null;
             switch (roomChoice) {

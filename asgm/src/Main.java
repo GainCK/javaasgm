@@ -72,7 +72,15 @@ public class Main {
             System.out.println("6. Update Profile");
             System.out.println("7. Logout");
             System.out.print("Enter your choice: ");
-            int choice = Integer.parseInt(scanner.nextLine());
+            String input = scanner.nextLine();
+            int choice;
+
+            try {
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number (1-5).");
+                continue;
+            }
 
             switch (choice) {
                 case 1:
@@ -112,7 +120,15 @@ public class Main {
             System.out.println("4. Payment Menu");
             System.out.println("5. Logout");
             System.out.print("Enter your choice: ");
-            int choice = Integer.parseInt(scanner.nextLine());
+            String input = scanner.nextLine();
+            int choice;
+
+            try {
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number (1-5).");
+                continue;
+            }
 
             switch (choice) {
                 case 1:
@@ -166,8 +182,15 @@ public class Main {
             System.out.println("4. View All Bookings");
             System.out.println("5. Back to Guest Menu");
             System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            String input = scanner.nextLine();
+            int choice;
+
+            try {
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number (1-5).");
+                continue;
+            }
 
             switch (choice) {
                 case 1:
@@ -198,8 +221,15 @@ public class Main {
             System.out.println("2. View Payments History");
             System.out.println("3. Back to Guest Menu");
             System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            String input = scanner.nextLine();
+            int choice;
+
+            try {
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number (1-3).");
+                continue;
+            }
 
             switch (choice) {
                 case 1:
@@ -280,8 +310,15 @@ public class Main {
             System.out.println("5. View Room Service Status");
             System.out.println("6. Back to Guest Menu");
             System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            String input = scanner.nextLine();
+            int choice;
+
+            try {
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number (1-6).");
+                continue;
+            }
 
             switch (choice) {
                 case 1:
@@ -317,9 +354,14 @@ public class Main {
         int choice;
         while (true) {
             System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            String input = scanner.nextLine();
 
+            try {
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+                continue;
+            }
             // Validate the user's choice
             if (choice >= 1 && choice <= bookings.size()) {
                 break; // Valid choice
