@@ -24,10 +24,10 @@ public class Cash extends Payment {
     }
 
     public void validateAmount() {
-        System.out.println("Amount to be paid: RM " + getAmount());
+        System.out.printf("Amount to be paid: RM %.2f%n" , getAmount());
 
         while (true) {
-            System.out.print("Enter payment amount: ");
+            System.out.print("Enter payment amount: RM ");
             if (scanner.hasNextDouble()) {
                 cashAmount = scanner.nextDouble();
                 scanner.nextLine(); // Consume newline
@@ -52,7 +52,7 @@ public class Cash extends Payment {
     public void calculateChange() {
         double change = cashAmount - getAmount();
         if (change > 0) {
-            System.out.println("Change to be returned: RM " + change);
+            System.out.printf("Change to be returned: RM %.2f%n" , change);
         } else if (change == 0) {
             System.out.println("Exact amount received. No change to be returned.");
         }

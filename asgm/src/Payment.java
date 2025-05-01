@@ -85,13 +85,13 @@ public class Payment {
         // ✅ Make sure amount reflects updated total
         this.amount = this.totalPrice;
     
-        System.out.println("Amount needs to be paid: RM " + amount);
+        System.out.printf("Amount needs to be paid: RM %.2f%n", amount);
     
         if (amount == 0.0) {
             System.out.println("No payment can be processed. Please book a room first.");
             return;
         }
-    
+     
         System.out.println("\nSelect your payment method:");
         System.out.println("1. Cash");
         System.out.println("2. E-wallet");
@@ -133,9 +133,9 @@ public class Payment {
     public void viewPaymentDetails() {
         System.out.println("=== Payment Details ===");
         System.out.println("Payment ID: " + getPaymentId());
-        System.out.println("Amount: RM " + amount);
+        System.out.printf("Amount: RM %.2f%n" , amount);
         System.out.println("Payment Method: " + (paymentMethod == 1 ? "Cash" : paymentMethod == 2 ? "E-wallet" : "Card"));
-        System.out.println("Total Price: RM " + totalPrice);
+        System.out.printf("Total Price: RM %.2f%n " ,totalPrice);
         System.out.println("Payment Status: " + paymentStatus);
         System.out.println("Booking ID: " + booking.getBookingID());
     }
@@ -147,9 +147,9 @@ public class Payment {
         } else {
             for (Payment payment : paymentList) {
                 System.out.println("Payment ID: " + payment.getPaymentId());
-                System.out.println("Amount: RM " + payment.getAmount());
+                System.out.printf("Amount: RM %.2f%n" , payment.getAmount());
                 System.out.println("Payment Method: " + (payment.getPaymentMethod() == 1 ? "Cash" : payment.getPaymentMethod() == 2 ? "E-wallet" : "Card"));
-                System.out.println("Total Price: RM " + payment.getTotalPrice());
+                System.out.printf("Total Price: RM %.2f%n", payment.getTotalPrice());
                 System.out.println("Payment Status: " + payment.getPaymentStatus());
                 System.out.println("Booking ID: " + payment.getBooking().getBookingID());
                 System.out.println("-------------------------");

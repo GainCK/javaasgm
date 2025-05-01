@@ -200,20 +200,20 @@ public abstract class Account {
         }
     
         // Validate IC
-        System.out.print("Enter IC (at least 12 digits): ");
+        System.out.print("Enter IC (must be 12 digits): ");
         String IC = scanner.nextLine();
-        while (!IC.matches("\\d{12,}")) { // IC must contain at least 12 digits
-            System.out.println("Invalid IC! IC must contain at least 12 digits.");
-            System.out.print("Enter IC (at least 12 digits): ");
+        while (!IC.matches("^\\d{12}$" )) { 
+            System.out.println("Invalid IC! IC must contain must be 12 digits.");
+            System.out.print("Enter IC (must be 12 digits): ");
             IC = scanner.nextLine();
         }
     
         // Validate Phone Number
-        System.out.print("Enter Phone No (at least 10 digits): ");
+        System.out.print("Enter Phone No (must be 10 digits): ");
         String phoneNo = scanner.nextLine();
-        while (!phoneNo.matches("\\d{10,}")) { // Phone number must contain at least 10 digits
-            System.out.println("Invalid Phone No! Phone number must contain at least 10 digits.");
-            System.out.print("Enter Phone No (at least 10 digits): ");
+        while (!phoneNo.matches("^\\d{10}$" )) { 
+            System.out.println("Invalid Phone No! Phone number must contain must be 10 digits.");
+            System.out.print("Enter Phone No (must be 10 digits): ");
             phoneNo = scanner.nextLine();
         }
     

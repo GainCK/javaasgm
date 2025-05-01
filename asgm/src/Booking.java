@@ -116,6 +116,11 @@ public class Booking {
     
                 if (daysBooked <= 0) {
                     System.out.println("Error: Check-out date must be after check-in date. Try again.");
+
+                } else if (daysBooked > 7) {
+                        System.out.println("Error: Cannot book more than 7 days.");
+                       
+                    
                 } else {
                     String newBookingID = reusableBookingIDs.isEmpty() ? "B" + bookingCounter++ : reusableBookingIDs.poll();
                     double totalPrice = room.getPrice() * daysBooked;
@@ -204,6 +209,11 @@ public class Booking {
 
                 if (newDaysBooked <= 0) {
                     System.out.println("Error: Check-out date must be after check-in date.");
+                    return;
+                }
+
+                if (newDaysBooked > 7) {
+                    System.out.println("Error: Cannot book more than 7 days.");
                     return;
                 }
 
