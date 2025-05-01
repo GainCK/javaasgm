@@ -146,13 +146,19 @@ public class Booking {
         }
     }
 
-    public static void updateBooking(Scanner scanner, ArrayList<Booking> bookingList) {
+    public static void updateBooking(Scanner scanner, ArrayList<Booking> bookingList, Guest guest) {
         System.out.println("\n--- Update Booking ---");
         System.out.print("Enter booking ID to update: ");
         String bookingID = scanner.nextLine();
 
         for (Booking booking : bookingList) {
             if (booking.getBookingID().equals(bookingID)) {
+                if (!booking.getGuest().equals(guest)) { // Validate ownership
+                    System.out.println("Error: You can only update your own bookings.");
+                    return;
+                }
+    
+                // Proceed with updating the booking
                 System.out.print("Enter new check-in date (DD-MM-YYYY): ");
                 String newCheckIn = scanner.nextLine();
                 System.out.print("Enter new check-out date (DD-MM-YYYY): ");

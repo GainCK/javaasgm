@@ -128,7 +128,7 @@ public class Main {
                     break;
 
                 case 4:
-                    paymentMenu(scanner); // Payment menu only accessible for guests
+                    paymentMenu(scanner, guest); // Payment menu only accessible for guests
                     break;
                 case 5:
                     guest.logout();
@@ -167,7 +167,7 @@ public class Main {
                     Booking.createBooking(scanner, bookingList, guest, roomList);
                     break;
                 case 2:
-                    Booking.updateBooking(scanner, bookingList);
+                    Booking.updateBooking(scanner, bookingList, guest);
                     break;
                 case 3:
                     Booking.cancelBooking(scanner, bookingList);
@@ -184,7 +184,7 @@ public class Main {
         }
     }
 
-    public static void paymentMenu(Scanner scanner) {
+    public static void paymentMenu(Scanner scanner, Guest guest) {
         while (true) {
             System.out.println("\n=== Payment Menu ===");
             System.out.println("1. Process Payment");
@@ -198,7 +198,8 @@ public class Main {
             switch (choice) {
                 case 1:
                     // Ensure the logged-in user has bookings to pay for
-                    if (bookingList.isEmpty()) {
+                    List<Booking> guestBookings = getBookingsForGuest(guest);
+                    if (guestBookings.isEmpty()) {
                         System.out.println("You have no bookings to pay for. Please create a booking first.");
                         break;
                     }
@@ -206,8 +207,8 @@ public class Main {
                     System.out.print("Enter Booking ID to pay for: ");
                     String bid = scanner.nextLine();
                     Booking toPay = null;
-                    for (Booking b : bookingList) {
-                        if (b.getBookingID().equalsIgnoreCase(bid)) {
+                    for (Booking b : guestBookings) { // Only check the logged-in guest's bookings
+                    if (b.getBookingID().equalsIgnoreCase(bid)) {
                             toPay = b;
                             break;
                         }
