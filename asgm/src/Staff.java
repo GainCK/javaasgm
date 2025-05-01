@@ -176,20 +176,12 @@ public class Staff extends Account {
         } else if (status.equalsIgnoreCase("Dirty")) {
             selectedRoom.setCleanlinessStatus("Dirty");
             selectedRoom.setAvailable(false); // Mark the room as unavailable
-            selectedRoom.setStatus("Dirty"); // Update status to "Dirty"
+            selectedRoom.setStatus("Unavailable"); // Update status to "Dirty"
             System.out.println("Room cleanliness updated to Dirty.");
         } else {
             System.out.println("Invalid status. Please enter 'Clean' or 'Dirty'.");
         }
     }
 
-
-    private Booking findBookingByID(String bookingID) {
-        for (Booking booking : Main.bookingList) {
-            if (booking.getBookingID().equals(bookingID)) {
-                return booking;
-            }
-        }
-        return null;
-    }
+ 
 }
