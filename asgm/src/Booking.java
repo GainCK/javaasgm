@@ -154,10 +154,26 @@ public class Booking {
         }
     
         if (bookingToCancel != null) {
+            // Check if the booking has already been checked in
+            if (bookingToCancel.getBookingStatus().equalsIgnoreCase("Checked-In")) {
+                System.out.println("Error: Booking cannot be canceled as it has already been checked in.");
+                return;
+            }
+    
+            // Refund the total price (room + room service) if the payment has been completed
+            Payment payment = bookingToCancel.getPayment();
+            if (payment != null && payment.getPaymentStatus().equalsIgnoreCase("Completed")) {
+                double totalRefund = payment.getTotalPrice();
+                Guest guest = bookingToCancel.getGuest();
+                System.out.println("Refund of RM " + totalRefund + " (Room + Room Service) has been issued to " + guest.getName() + ".");
+            }
+    
+            // Remove the booking and mark the room as available
             bookingList.remove(bookingToCancel);
             reusableBookingIDs.add(bookingID); // Add the canceled booking ID to the reusable pool
             bookingToCancel.getRoomType().setAvailable(true); // Mark the room as available
-            System.out.println("Booking " + bookingID + " has been cancelled.");
+            bookingToCancel.getRoomType().setStatus("Available"); // Reset room status to "Available"
+            System.out.println("Booking " + bookingID + " has been canceled.");
         } else {
             System.out.println("Booking ID not found.");
         }
