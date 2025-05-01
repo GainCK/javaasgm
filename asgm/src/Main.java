@@ -202,6 +202,12 @@ public class Main {
                         System.out.println("You have no bookings to pay for. Please create a booking first.");
                         break;
                     }
+
+                    System.out.println("\nYour Bookings:");
+                    for (Booking b : guestBookings) {
+                        System.out.println("- Booking ID: " + b.getBookingID());
+                    }
+
                     // Process payment for a booking tied to the logged-in guest
                     System.out.print("Enter Booking ID to pay for: ");
                     String bid = scanner.nextLine();
@@ -255,7 +261,7 @@ public class Main {
             System.out.println("Payment is already completed. Room service options are no longer available.");
             return;
         }
-        
+
         RoomService roomService = booking.getRoomService(); // Get existing RoomService object
 
         while (true) {

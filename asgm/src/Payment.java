@@ -65,7 +65,9 @@ public class Payment {
 
     public void processPayment(Scanner scanner, ArrayList<Payment> paymentList) {
         System.out.println("\n=== Payment Processing ===");
-    
+        
+        System.out.println("Booking ID: " + booking.getBookingID());
+
         if (paymentStatus.equalsIgnoreCase("Completed")) {
             System.out.println("This payment has already been completed. You cannot pay again.");
             return;

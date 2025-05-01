@@ -172,12 +172,25 @@ public abstract class Account {
     }
 
     private static String[] collectUserDetails(Scanner scanner) {
-        System.out.print("Enter Name: ");
+        // Validate Name
+        System.out.print("Enter Name (letters only): ");
         String name = scanner.nextLine();
-
-        System.out.print("Enter Password: ");
+        while (!name.matches("[a-zA-Z ]+")) { // Name must contain only letters and spaces
+            System.out.println("Invalid Name! Name can only contain letters.");
+            System.out.print("Enter Name (letters only): ");
+            name = scanner.nextLine();
+        }
+    
+        // Validate Password
+        System.out.print("Enter Password (more than 8 characters): ");
         String password = scanner.nextLine();
-
+        while (password.length() < 8) { // Password must be more than 8 characters
+            System.out.println("Invalid Password! Password must be more than 8 characters.");
+            System.out.print("Enter Password (more than 8 characters): ");
+            password = scanner.nextLine();
+        }
+    
+        // Validate Birthday
         System.out.print("Enter Birthday (dd/mm/yyyy): ");
         String birthday = scanner.nextLine();
         while (!isValidBirthday(birthday)) {
@@ -185,31 +198,34 @@ public abstract class Account {
             System.out.print("Enter Birthday (dd/mm/yyyy): ");
             birthday = scanner.nextLine();
         }
-
-        System.out.print("Enter IC (numbers only): ");
+    
+        // Validate IC
+        System.out.print("Enter IC (at least 12 digits): ");
         String IC = scanner.nextLine();
-        while (!isValidIC(IC)) {
-            System.out.println("Invalid IC! Please enter numbers only.");
-            System.out.print("Enter IC (numbers only): ");
+        while (!IC.matches("\\d{12,}")) { // IC must contain at least 12 digits
+            System.out.println("Invalid IC! IC must contain at least 12 digits.");
+            System.out.print("Enter IC (at least 12 digits): ");
             IC = scanner.nextLine();
         }
-
-        System.out.print("Enter Phone No (numbers only): ");
+    
+        // Validate Phone Number
+        System.out.print("Enter Phone No (at least 10 digits): ");
         String phoneNo = scanner.nextLine();
-        while (!isValidPhoneNo(phoneNo)) {
-            System.out.println("Invalid Phone No! Please enter numbers only.");
-            System.out.print("Enter Phone No (numbers only): ");
+        while (!phoneNo.matches("\\d{10,}")) { // Phone number must contain at least 10 digits
+            System.out.println("Invalid Phone No! Phone number must contain at least 10 digits.");
+            System.out.print("Enter Phone No (at least 10 digits): ");
             phoneNo = scanner.nextLine();
         }
-
-        System.out.print("Enter Email: ");
+    
+        // Validate Email
+        System.out.print("Enter Email (e.g., username@domain.com): ");
         String email = scanner.nextLine();
         while (!isValidEmail(email)) {
             System.out.println("Invalid Email format! Please enter a valid email (e.g., username@domain.com).");
             System.out.print("Enter Email (e.g., username@domain.com): ");
             email = scanner.nextLine();
         }
-
+    
         return new String[] { name, password, birthday, IC, phoneNo, email };
     }
 
