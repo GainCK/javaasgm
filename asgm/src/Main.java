@@ -23,8 +23,15 @@ public class Main {
             System.out.println("2. Login");
             System.out.println("3. Exit");
             System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline character
+            String input = scanner.nextLine();
+            int choice;
+
+            try {
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number (1-3).");
+                continue; // back to the top of the loop
+            }
 
             switch (choice) {
                 case 1:
@@ -213,7 +220,7 @@ public class Main {
                     String bid = scanner.nextLine();
                     Booking toPay = null;
                     for (Booking b : guestBookings) { // Only check the logged-in guest's bookings
-                    if (b.getBookingID().equalsIgnoreCase(bid)) {
+                        if (b.getBookingID().equalsIgnoreCase(bid)) {
                             toPay = b;
                             break;
                         }
@@ -255,7 +262,7 @@ public class Main {
             System.out.println("No booking or payment found. Cannot access Room Service Menu.");
             return;
         }
-    
+
         Payment payment = booking.getPayment();
         if (payment.getPaymentStatus().equalsIgnoreCase("Completed")) {
             System.out.println("Payment is already completed. Room service options are no longer available.");
@@ -312,7 +319,7 @@ public class Main {
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
-    
+
             // Validate the user's choice
             if (choice >= 1 && choice <= bookings.size()) {
                 break; // Valid choice
@@ -320,7 +327,7 @@ public class Main {
                 System.out.println("Invalid choice! Please select a number between 1 and " + bookings.size() + ".");
             }
         }
-    
+
         return bookings.get(choice - 1); // Return the selected booking
     }
 
