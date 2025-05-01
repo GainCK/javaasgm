@@ -101,8 +101,15 @@ public class Payment {
         System.out.println("2. E-wallet");
         System.out.println("3. Card");
         System.out.print("Enter your choice (1-3): ");
-        int paymentMethod = scanner.nextInt();
-        scanner.nextLine();
+        String input = scanner.nextLine(); 
+            int paymentMethod;;
+
+            try {
+                paymentMethod = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number (1-5).");
+                return;
+            }
     
         this.paymentMethod = paymentMethod;
     

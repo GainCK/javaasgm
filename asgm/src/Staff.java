@@ -41,9 +41,20 @@ public class Staff extends Account {
                     i + 1, b.getBookingID(), b.getCustName(), b.getRoomType().getRoomType(), b.getBookingStatus());
         }
 
-        System.out.print("Select a booking to check in (1-" + eligible.size() + "): ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int choice = -1;
+        while (true) {
+            System.out.print("Select a booking to check in (1-" + eligible.size() + "): ");
+            String input = scanner.nextLine();
+            try {
+                choice = Integer.parseInt(input);
+                if (choice >= 1 && choice <= eligible.size())
+                    break;
+                else
+                    System.out.println("Invalid range. Try again.");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number.");
+            }
+        }
 
         if (choice < 1 || choice > eligible.size()) {
             System.out.println("Invalid selection.");
@@ -53,10 +64,10 @@ public class Staff extends Account {
         Booking selected = eligible.get(choice - 1);
 
         Payment payment = selected.getPayment();
-    if (payment == null || !payment.getPaymentStatus().equalsIgnoreCase("Completed")) {
-        System.out.println("Error: Payment for this booking has not been completed. Check-in denied.");
-        return;
-    }
+        if (payment == null || !payment.getPaymentStatus().equalsIgnoreCase("Completed")) {
+            System.out.println("Error: Payment for this booking has not been completed. Check-in denied.");
+            return;
+        }
         selected.checkIn();
         System.out.println("Check-in successful for Booking ID: " + selected.getBookingID());
 
@@ -83,9 +94,20 @@ public class Staff extends Account {
                     i + 1, b.getBookingID(), b.getCustName(), b.getRoomType().getRoomType(), b.getBookingStatus());
         }
 
-        System.out.print("Select a booking to check out (1-" + eligible.size() + "): ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int choice = -1;
+        while (true) {
+            System.out.print("Select a booking to check in (1-" + eligible.size() + "): ");
+            String input = scanner.nextLine();
+            try {
+                choice = Integer.parseInt(input);
+                if (choice >= 1 && choice <= eligible.size())
+                    break;
+                else
+                    System.out.println("Invalid range. Try again.");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number.");
+            }
+        }
 
         if (choice < 1 || choice > eligible.size()) {
             System.out.println("Invalid selection.");
@@ -105,15 +127,15 @@ public class Staff extends Account {
 
     public void viewAllRoomStatus() {
         System.out.println("\n--- All Room Status ---");
-    
+
         if (Main.roomList.isEmpty()) {
             System.out.println("No rooms available.");
             return;
         }
-    
+
         for (Room room : Main.roomList) {
             String roomStatus = room.getStatus(); // Start with the room's actual status
-    
+
             // Check if the room is associated with any booking
             boolean isAssociatedWithBooking = false;
             for (Booking booking : Main.bookingList) {
@@ -126,12 +148,13 @@ public class Staff extends Account {
                     break;
                 }
             }
-    
+
             // If the room is clean and available, override the status to "Available"
-            if (!isAssociatedWithBooking && room.getCleanlinessStatus().equalsIgnoreCase("Clean") && room.isAvailable()) {
+            if (!isAssociatedWithBooking && room.getCleanlinessStatus().equalsIgnoreCase("Clean")
+                    && room.isAvailable()) {
                 roomStatus = "Available";
             }
-    
+
             System.out.printf("Room ID: %s | Type: %s | Status: %s | Cleanliness: %s\n",
                     room.getRoomId(),
                     room.getRoomType(),
@@ -142,32 +165,43 @@ public class Staff extends Account {
 
     public void updateRoomCleanliness(Scanner scanner) {
         System.out.println("\n--- Update Room Cleanliness ---");
-    
+
         if (Main.roomList.isEmpty()) {
             System.out.println("No rooms available.");
             return;
         }
-    
+
         for (int i = 0; i < Main.roomList.size(); i++) {
             Room room = Main.roomList.get(i);
             System.out.printf("%d. Room ID: %s | Type: %s | Cleanliness: %s | Status: %s\n",
                     i + 1, room.getRoomId(), room.getRoomType(), room.getCleanlinessStatus(), room.getStatus());
         }
-    
-        System.out.print("Select a room to update cleanliness (1-" + Main.roomList.size() + "): ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-    
+
+        int choice = -1;
+        while (true) {
+            System.out.print("Select a room to update cleanliness (1-" + Main.roomList.size() + "): ");
+            String input = scanner.nextLine();
+            try {
+                choice = Integer.parseInt(input);
+                if (choice >= 1 && choice <= Main.roomList.size())
+                    break;
+                else
+                    System.out.println("Invalid room number. Try again.");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+            }
+        }
+
         if (choice < 1 || choice > Main.roomList.size()) {
             System.out.println("Invalid room selection.");
             return;
         }
-    
+
         Room selectedRoom = Main.roomList.get(choice - 1);
-    
+
         System.out.print("Set cleanliness status (Clean / Dirty): ");
         String status = scanner.nextLine();
-    
+
         if (status.equalsIgnoreCase("Clean")) {
             selectedRoom.setCleanlinessStatus("Clean");
             selectedRoom.setAvailable(true); // Mark the room as available
@@ -183,5 +217,4 @@ public class Staff extends Account {
         }
     }
 
- 
 }
