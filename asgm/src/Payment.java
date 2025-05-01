@@ -1,3 +1,7 @@
+//Author : Chuh Zhe Yong
+//Module : Payment
+//System : Hotel Management System
+//Group  : DFT1G11
 
 import java.util.ArrayList;
 import java.util.Scanner;

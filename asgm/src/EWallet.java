@@ -1,3 +1,9 @@
+//Author : Chuh Zhe Yong
+//Module : EWallet Payment
+//System : Hotel Management System
+//Group  : DFT1G11
+
+
 import java.util.Random;
 import java.util.Scanner;
 

@@ -1,3 +1,8 @@
+//Author : Chuh Zhe Yong
+//Module : Cash Payment
+//System : Hotel Management System
+//Group  : DFT1G11
+
 import java.util.Scanner;
 
 public class Cash extends Payment {
