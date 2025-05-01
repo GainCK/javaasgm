@@ -51,7 +51,15 @@ public class Staff extends Account {
         }
 
         Booking selected = eligible.get(choice - 1);
+
+        Payment payment = selected.getPayment();
+    if (payment == null || !payment.getPaymentStatus().equalsIgnoreCase("Completed")) {
+        System.out.println("Error: Payment for this booking has not been completed. Check-in denied.");
+        return;
+    }
         selected.checkIn();
+        System.out.println("Check-in successful for Booking ID: " + selected.getBookingID());
+
     }
 
     public void checkOutRoom(Scanner scanner) {

@@ -54,9 +54,9 @@ public class Room {
     public void checkIn() {
         if (status) {
             status = false; // Mark as occupied
-            System.out.println("Room " + roomId + " is now occupied.");
-        } else {
             System.out.println("Room " + roomId + " is already occupied.");
+        } else {
+            System.out.println("Room " + roomId + " is now occupied.");
         }
     }
 

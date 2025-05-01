@@ -2,6 +2,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class Booking {
@@ -16,6 +18,7 @@ public class Booking {
     private Payment payment;
     private Guest guest;
     private RoomService roomService;
+    static Queue<String> reusableBookingIDs = new LinkedList<>();
     private static int bookingCounter = 1;
 
     public Booking(String bookingID, Guest guest, Room roomType, String checkInDate, String checkOutDate, double totalPrice) {
@@ -113,8 +116,8 @@ public class Booking {
                 if (daysBooked <= 0) {
                     System.out.println("Error: Check-out date must be after check-in date. Try again.");
                 } else {
+                    String newBookingID = reusableBookingIDs.isEmpty() ? "B" + bookingCounter++ : reusableBookingIDs.poll();
                     double totalPrice = room.getPrice() * daysBooked;
-                    String newBookingID = "B" + bookingCounter++;
                     Booking newBooking = new Booking(newBookingID, guest, room, checkInStr, checkOutStr, totalPrice);
                     bookingList.add(newBooking);
 
@@ -137,9 +140,19 @@ public class Booking {
         System.out.println("\n--- Cancel Booking ---");
         System.out.print("Enter booking ID to cancel: ");
         String bookingID = scanner.nextLine();
-
-        boolean found = bookingList.removeIf(b -> b.getBookingID().equals(bookingID));
-        if (found) {
+    
+        Booking bookingToCancel = null;
+        for (Booking b : bookingList) {
+            if (b.getBookingID().equals(bookingID)) {
+                bookingToCancel = b;
+                break;
+            }
+        }
+    
+        if (bookingToCancel != null) {
+            bookingList.remove(bookingToCancel);
+            reusableBookingIDs.add(bookingID); // Add the canceled booking ID to the reusable pool
+            bookingToCancel.getRoomType().setAvailable(true); // Mark the room as available
             System.out.println("Booking " + bookingID + " has been cancelled.");
         } else {
             System.out.println("Booking ID not found.");
