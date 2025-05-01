@@ -105,31 +105,33 @@ public class Staff extends Account {
 
     public void viewAllRoomStatus() {
         System.out.println("\n--- All Room Status ---");
-
+    
         if (Main.roomList.isEmpty()) {
             System.out.println("No rooms available.");
             return;
         }
-
+    
         for (Room room : Main.roomList) {
-            String roomStatus = "Available";
-
-            Booking foundBooking = null;
+            String roomStatus = room.getStatus(); // Start with the room's actual status
+    
+            // Check if the room is associated with any booking
+            boolean isAssociatedWithBooking = false;
             for (Booking booking : Main.bookingList) {
                 if (booking.getRoomType().getRoomId().equals(room.getRoomId())) {
-                    foundBooking = booking;
+                    if (booking.getBookingStatus().equalsIgnoreCase("Confirmed")) {
+                        roomStatus = "Occupied"; // Room is booked but not yet checked in
+                    } else if (booking.getBookingStatus().equalsIgnoreCase("Checked-In")) {
+                        roomStatus = "Inhouse"; // Room is currently occupied by a guest
+                    }
+                    break;
                 }
             }
-
-            if (foundBooking != null) {
-                String bStatus = foundBooking.getBookingStatus();
-                if (bStatus.equalsIgnoreCase("Checked-In")) {
-                    roomStatus = "Inhouse";
-                } else if (bStatus.equalsIgnoreCase("Checked-Out")) {
-                    roomStatus = "Checked out";
-                }
+    
+            // If the room is clean and available, override the status to "Available"
+            if (!isAssociatedWithBooking && room.getCleanlinessStatus().equalsIgnoreCase("Clean") && room.isAvailable()) {
+                roomStatus = "Available";
             }
-
+    
             System.out.printf("Room ID: %s | Type: %s | Status: %s | Cleanliness: %s\n",
                     room.getRoomId(),
                     room.getRoomType(),
@@ -140,43 +142,47 @@ public class Staff extends Account {
 
     public void updateRoomCleanliness(Scanner scanner) {
         System.out.println("\n--- Update Room Cleanliness ---");
-
+    
         if (Main.roomList.isEmpty()) {
             System.out.println("No rooms available.");
             return;
         }
-
+    
         for (int i = 0; i < Main.roomList.size(); i++) {
             Room room = Main.roomList.get(i);
-            System.out.printf("%d. Room ID: %s | Type: %s | Cleanliness: %s\n",
-                    i + 1, room.getRoomId(), room.getRoomType(), room.getCleanlinessStatus());
+            System.out.printf("%d. Room ID: %s | Type: %s | Cleanliness: %s | Status: %s\n",
+                    i + 1, room.getRoomId(), room.getRoomType(), room.getCleanlinessStatus(), room.getStatus());
         }
-
+    
         System.out.print("Select a room to update cleanliness (1-" + Main.roomList.size() + "): ");
         int choice = scanner.nextInt();
         scanner.nextLine();
-
+    
         if (choice < 1 || choice > Main.roomList.size()) {
             System.out.println("Invalid room selection.");
             return;
         }
-
+    
         Room selectedRoom = Main.roomList.get(choice - 1);
-
+    
         System.out.print("Set cleanliness status (Clean / Dirty): ");
         String status = scanner.nextLine();
-
-        if (status.equalsIgnoreCase("Clean") || status.equalsIgnoreCase("Dirty")) {
-            selectedRoom.setCleanlinessStatus(status);
-            System.out.println("Room cleanliness updated.");
+    
+        if (status.equalsIgnoreCase("Clean")) {
+            selectedRoom.setCleanlinessStatus("Clean");
+            selectedRoom.setAvailable(true); // Mark the room as available
+            selectedRoom.setStatus("Available"); // Reset room status to "Available"
+            System.out.println("Room cleanliness updated to Clean. Room is now Available.");
+        } else if (status.equalsIgnoreCase("Dirty")) {
+            selectedRoom.setCleanlinessStatus("Dirty");
+            selectedRoom.setAvailable(false); // Mark the room as unavailable
+            selectedRoom.setStatus("Dirty"); // Update status to "Dirty"
+            System.out.println("Room cleanliness updated to Dirty.");
         } else {
             System.out.println("Invalid status. Please enter 'Clean' or 'Dirty'.");
         }
     }
 
-    public void updateStaffProfile() {
-        System.out.println(getName() + " has updated their staff profile.");
-    }
 
     private Booking findBookingByID(String bookingID) {
         for (Booking booking : Main.bookingList) {

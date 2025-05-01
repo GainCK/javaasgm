@@ -2,14 +2,16 @@ public class Room {
     private String roomId;
     private String roomType;
     private double price;
-    private boolean status;  // true = Available, false = Occupied
+    private boolean availability;
+    private String status;
     private String cleanlinessStatus = "Clean";
 
     public Room(String roomType, double price, String roomId) {
         this.roomId = roomId;
         this.roomType = roomType;
         this.price = price;
-        this.status = true;  // Initially available
+        this.availability = true;  // Initially available
+        this.status = "Available";
     }
 
     // Getters
@@ -26,6 +28,9 @@ public class Room {
     }
 
     public boolean isAvailable() {
+        return availability;
+    }
+    public String getStatus() {
         return status;
     }
 
@@ -46,36 +51,31 @@ public class Room {
         this.price = price;
     }
 
-    public void setAvailable(boolean status) {
+    public void setAvailable(boolean availability) {
+        this.availability = availability;
+    }
+
+    public void setStatus(String status) {
         this.status = status;
     }
 
     // Status changes
     public void checkIn() {
-        if (status) {
-            status = false; // Mark as occupied
+        if (availability) {
+            availability = false; // Mark as occupied
             System.out.println("Room " + roomId + " is already occupied.");
         } else {
             System.out.println("Room " + roomId + " is now occupied.");
         }
     }
 
-    public void checkOut() {
-        if (!status) {
-            status = true; // Mark as available
-            cleanlinessStatus = "Dirty"; // Auto-set as dirty after checkout
-            System.out.println("Room " + roomId + " has been checked out. Room marked as Dirty.");
-        } else {
-            System.out.println("Room " + roomId + " is already available.");
-        }
-    }
 
     // Display info
     public void displayRoom() {
         System.out.println("Room ID: " + roomId +
                            ", Room Type: " + roomType +
                            ", Price: RM " + price +
-                           ", Status: " + (status ? "Available" : "Occupied") +
+                           ", Status: " + (availability ? "Available" : "Occupied") +
                            ", Cleanliness: " + cleanlinessStatus);
     }
 }

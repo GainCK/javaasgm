@@ -64,7 +64,7 @@ public class Booking {
 
     public static void createBooking(Scanner scanner, ArrayList<Booking> bookingList, Guest guest, ArrayList<Room> roomList) {
         System.out.println("\n--- Create Booking ---");
-
+    
         Room room = null;
         while (room == null) {
             System.out.println("\nSelect Room Type:");
@@ -74,7 +74,7 @@ public class Booking {
             System.out.print("Enter your choice (1-3): ");
             int roomChoice = scanner.nextInt();
             scanner.nextLine();
-
+    
             String roomType = null;
             switch (roomChoice) {
                 case 1 -> roomType = "Single";
@@ -85,34 +85,35 @@ public class Booking {
                     continue;
                 }
             }
-
+    
             for (Room r : roomList) {
-                if (r.getRoomType().equalsIgnoreCase(roomType) && r.isAvailable()) {
+                // Check if the room is available and clean
+                if (r.getRoomType().equalsIgnoreCase(roomType) && r.isAvailable() && r.getCleanlinessStatus().equalsIgnoreCase("Clean")) {
                     room = r;
                     break;
                 }
             }
-
+    
             if (room == null) {
-                System.out.println("No available rooms of the selected type. Please choose a different type.");
+                System.out.println("No available and clean rooms of the selected type. Please choose a different type.");
                 return;
             }
         }
-
+    
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate checkInDate, checkOutDate;
-
+    
         while (true) {
             System.out.print("Enter check-in date (DD-MM-YYYY): ");
             String checkInStr = scanner.nextLine();
             System.out.print("Enter check-out date (DD-MM-YYYY): ");
             String checkOutStr = scanner.nextLine();
-
+    
             try {
                 checkInDate = LocalDate.parse(checkInStr, formatter);
                 checkOutDate = LocalDate.parse(checkOutStr, formatter);
                 long daysBooked = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
-
+    
                 if (daysBooked <= 0) {
                     System.out.println("Error: Check-out date must be after check-in date. Try again.");
                 } else {
@@ -120,11 +121,14 @@ public class Booking {
                     double totalPrice = room.getPrice() * daysBooked;
                     Booking newBooking = new Booking(newBookingID, guest, room, checkInStr, checkOutStr, totalPrice);
                     bookingList.add(newBooking);
-
+    
                     Payment newPayment = new Payment(newBooking.getTotalPrice(), 0, newBooking);
                     newBooking.setPayment(newPayment);
-                    room.setAvailable(false); // reserve the room
-
+    
+                    // Update room status to "Occupied"
+                    room.setAvailable(false); // Reserve the room
+                    room.setStatus("Occupied"); // Mark room as occupied
+    
                     System.out.println("\nBooking created successfully!");
                     System.out.println("Booking ID: " + newBookingID);
                     System.out.println("Room Type: " + room.getRoomType());
@@ -227,23 +231,32 @@ public class Booking {
 
     // ✅ Fixed checkIn logic
     public void checkIn() {
-        if (bookingStatus.equalsIgnoreCase("Confirmed")) {
-            roomType.checkIn(); // still mark as occupied
-            bookingStatus = "Checked-In";
-            System.out.println("Booking " + bookingID + " has been checked in.");
-        } else {
-            System.out.println("Cannot check in. Current booking status: " + bookingStatus);
+        if (!this.bookingStatus.equalsIgnoreCase("Confirmed")) {
+            System.out.println("Error: Booking is not in a state to be checked in.");
+            return;
         }
+    
+        this.bookingStatus = "Checked-In"; // Update booking status
+        Room room = this.roomType; // Get the associated room
+        room.setAvailable(false); // Mark the room as unavailable
+        room.setStatus("Inhouse"); // Update room status to "Inhouse"
+    
+        System.out.println("Room " + room.getRoomId() + " has been checked in. Status updated to Inhouse.");
+        System.out.println("Booking " + this.bookingID + " has been checked in.");
     }
-
     public void checkOut() {
-        if (!roomType.isAvailable()) {
-            roomType.checkOut(); // sets room available = true
-            roomType.setCleanlinessStatus("Dirty");
-            bookingStatus = "Checked-Out";
-            System.out.println("Booking " + bookingID + " has been checked out. Room marked as Dirty.");
+        Room room = this.roomType; // Get the associated room
+    
+        if (!room.isAvailable()) {
+            room.setAvailable(true); // Mark the room as available
+            room.setCleanlinessStatus("Dirty"); // Auto-set as dirty after checkout
+            room.setStatus("Checked out"); // Update room status to "Checked out"
+            this.bookingStatus = "Checked-Out"; // Update booking status
+    
+            System.out.println("Room " + room.getRoomId() + " has been checked out. Room marked as Dirty.");
+            System.out.println("Booking " + this.bookingID + " has been checked out.");
         } else {
-            System.out.println("Room " + roomType.getRoomId() + " is already available.");
+            System.out.println("Room " + room.getRoomId() + " is already available.");
         }
     }
 

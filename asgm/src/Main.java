@@ -245,6 +245,17 @@ public class Main {
 
     // Modified Room Service menu
     public static void roomServiceMenu(Scanner scanner, Booking booking) {
+        if (booking == null || booking.getPayment() == null) {
+            System.out.println("No booking or payment found. Cannot access Room Service Menu.");
+            return;
+        }
+    
+        Payment payment = booking.getPayment();
+        if (payment.getPaymentStatus().equalsIgnoreCase("Completed")) {
+            System.out.println("Payment is already completed. Room service options are no longer available.");
+            return;
+        }
+        
         RoomService roomService = booking.getRoomService(); // Get existing RoomService object
 
         while (true) {
