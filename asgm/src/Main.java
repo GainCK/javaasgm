@@ -173,7 +173,7 @@ public class Main {
                     Booking.cancelBooking(scanner, bookingList);
                     break;
                 case 4:
-                    Booking.viewAllBookings(bookingList);
+                    Booking.viewAllBookings(bookingList, guest);
                     break;
                 case 5:
                     return; // Back to Guest Menu

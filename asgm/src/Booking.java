@@ -184,15 +184,20 @@ public class Booking {
         System.out.println("Booking ID not found.");
     }
 
-    public static void viewAllBookings(ArrayList<Booking> bookingList) {
-        System.out.println("\n--- All Bookings ---");
-        if (bookingList.isEmpty()) {
-            System.out.println("No bookings found.");
-        } else {
-            for (Booking booking : bookingList) {
+    public static void viewAllBookings(ArrayList<Booking> bookingList, Guest guest) {
+        System.out.println("\n--- Your Bookings ---");
+        boolean hasBookings = false;
+    
+        for (Booking booking : bookingList) {
+            if (booking.getGuest().equals(guest)) { // Only display bookings for the logged-in guest
                 booking.displayBookingDetail();
                 System.out.println("--------------------------");
+                hasBookings = true;
             }
+        }
+    
+        if (!hasBookings) {
+            System.out.println("No bookings found.");
         }
     }
 
