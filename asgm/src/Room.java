@@ -1,3 +1,8 @@
+//Author : Trisha Mae Low Kar Mun
+//Module : Room Management
+//System : Hotel Management System
+//Group  : DFT1G11
+
 public class Room {
     private String roomId;
     private String roomType;

@@ -1,3 +1,8 @@
+//Author : Trisha Mae Low Kar Mun
+//Module : Check in and Check out (Staff) Management
+//System : Hotel Management System
+//Group  : DFT1G11
+
 import java.util.ArrayList;
 import java.util.Scanner;
 

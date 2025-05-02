@@ -1,3 +1,8 @@
+//Author : Chuh Zhe Yong / Gain Chen Keat / Trisha Mae Low Kar Mun
+//Module : Menu Management
+//System : Hotel Management System
+//Group  : DFT1G11
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.List;

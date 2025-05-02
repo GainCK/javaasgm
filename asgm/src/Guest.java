@@ -1,3 +1,8 @@
+//Author : Gain Chen Keat
+//Module : Guest Management
+//System : Hotel Management System
+//Group  : DFT1G11
+
 public class Guest extends Account {
 
     public Guest() {

@@ -1,5 +1,5 @@
 //Author : Chuh Zhe Yong
-//Module : Payment
+//Module : Payment and Billing Management
 //System : Hotel Management System
 //Group  : DFT1G11
 
