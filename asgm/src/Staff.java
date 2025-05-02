@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Staff extends Account {
 
     private Report report;
-
+ 
     public Staff() {
         super();
         this.report = new Report(Main.bookingList);
