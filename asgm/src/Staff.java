@@ -173,8 +173,8 @@ public class Staff extends Account {
 
         for (int i = 0; i < Main.roomList.size(); i++) {
             Room room = Main.roomList.get(i);
-            System.out.printf("%d. Room ID: %s | Type: %s | Cleanliness: %s | Status: %s\n",
-                    i + 1, room.getRoomId(), room.getRoomType(), room.getCleanlinessStatus(), room.getStatus());
+            System.out.printf("%d. Room ID: %s | Type: %s | Status: %s | Cleanliness: %s\n",
+                    i + 1, room.getRoomId(), room.getRoomType(), room.getStatus(), room.getCleanlinessStatus());
         }
 
         int choice = -1;
