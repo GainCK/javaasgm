@@ -14,10 +14,6 @@ public class HouseKeeping {
         this.rooms = new ArrayList<>();
     }
 
-    // Add a room to the list (optional utility)
-    public void addRoom(Room room) {
-        rooms.add(room);
-    }
 
     // Display dirty rooms (status = false)
     public void showDirtyRooms() {
