@@ -62,23 +62,6 @@ public class Report {
         System.out.println("----------------------------------");
     }
     
-    public void generateBookingDetailsReport() {
-        System.out.println("\n=== DETAILED BOOKING REPORT ===");
-        System.out.printf("%-10s %-20s %-15s %-12s %-12s %-10s %-15s %-15s\n",
-                         "BookingID", "Guest", "Room Type", "Check-In", "Check-Out", "Price", "Status", "Payment");
-        
-        for (Booking booking : bookings) {
-            System.out.printf("%-10s %-20s %-15s %-12s %-12s %-10s %-15s %-15s\n",
-                booking.getBookingID(),
-                booking.getCustName(),
-                booking.getRoomType().getRoomType(),
-                booking.getCheckInDate(),
-                booking.getCheckOutDate(),
-                currencyFormat.format(booking.getTotalPrice()),
-                booking.getBookingStatus(),
-                booking.getPaymentStatus());
-        }
-    }
     
     public void generateRoomTypeAnalysis() {
         int[] roomCounts = new int[3]; // 0: single, 1: double, 2: deluxe
@@ -103,28 +86,31 @@ public class Report {
        
     }
     
-    public void generateGuestReport(ArrayList<Payment> paymentList) {
-        System.out.println("\n=== Guest Payment Report ===");
-    
-        double grandTotal = 0.0;
-    
-        for (Payment payment : paymentList) {
-            Booking booking = payment.getBooking();
-            Guest guest = booking.getGuest();
-    
-            System.out.println("Guest Name: " + guest.getName());
-            System.out.println("Booking ID: " + booking.getBookingID());
-            System.out.printf("Room Price: RM %.2f%n", booking.getTotalPrice());
-    
-            double paidAmount = payment.getAmount();  // Already includes room service
-            System.out.printf("Total Paid (with Room Service): RM %.2f%n", paidAmount);
-            System.out.println("Payment Status: " + payment.getPaymentStatus());
-            System.out.println("-----------------------------");
-    
-            grandTotal += paidAmount;
-        }
-    
-        System.out.printf("Grand Total (All Guests): RM %.2f%n", grandTotal);
+public void generateGuestReport(ArrayList<Payment> paymentList) {
+    System.out.println("\n=== Guest Payment Report ===");
+
+    double grandTotal = 0.0;
+
+    for (Payment payment : paymentList) {
+        Booking booking = payment.getBooking();
+        Guest guest = booking.getGuest();
+
+        System.out.println("Guest Name: " + guest.getName());
+        System.out.println("Booking ID: " + booking.getBookingID());
+        System.out.println("Room Type: " + booking.getRoomType().getRoomType()); // Added Room Type
+        System.out.println("Check-in date : " + booking.getCheckInDate());
+        System.out.println("Check-out date : " + booking.getCheckOutDate());
+        System.out.println("Booking Status: " + booking.getBookingStatus()); // Added Booking Status
+        System.out.printf("Room Price: RM %.2f%n", booking.getTotalPrice());
+        double paidAmount = payment.getAmount(); // Already includes room service
+        System.out.printf("Total Paid (with Room Service): RM %.2f%n", paidAmount);
+        System.out.println("Payment Status: " + payment.getPaymentStatus());
+        System.out.println("-----------------------------");
+
+        grandTotal += paidAmount;
     }
+
+    System.out.printf("Grand Total (All Guests): RM %.2f%n", grandTotal);
+}
     
 }
