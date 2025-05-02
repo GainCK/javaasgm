@@ -307,12 +307,23 @@ public abstract class Account {
 
         System.out.print("New Password (leave blank to keep current): ");
         String newPassword = scanner.nextLine();
-        if (!newPassword.isEmpty())
+        while (!newPassword.isEmpty() && newPassword.length() < 8) { // Validate password length
+            System.out.println("Invalid Password! Password must be more than 8 characters.");
+            System.out.print("New Password (leave blank to keep current): ");
+            newPassword = scanner.nextLine();
+        }
+        if (!newPassword.isEmpty()) {
             loggedIn.setPassword(newPassword);
+        }
 
         System.out.print("New Birthday (dd/mm/yyyy, leave blank to keep current): ");
         String newBirthday = scanner.nextLine();
-        if (!newBirthday.isEmpty() && isValidBirthday(newBirthday)) {
+        while (!newBirthday.isEmpty() && !isValidBirthday(newBirthday)) {
+            System.out.println("Invalid Birthday format! Please use dd/mm/yyyy.");
+            System.out.print("New Birthday (dd/mm/yyyy, leave blank to keep current): ");
+            newBirthday = scanner.nextLine();
+        }
+        if (!newBirthday.isEmpty()) {
             loggedIn.setBirthday(newBirthday);
         }
 
@@ -320,13 +331,27 @@ public abstract class Account {
 
         System.out.print("New Phone No (leave blank to keep current): ");
         String newPhoneNo = scanner.nextLine();
-        if (!newPhoneNo.isEmpty() && isValidPhoneNo(newPhoneNo)) {
+        while (!newPhoneNo.isEmpty() && (!isValidPhoneNo(newPhoneNo) || newPhoneNo.length() != 10)) {
+            if (!isValidPhoneNo(newPhoneNo)) {
+                System.out.println("Invalid Phone No! Phone number must contain only digits.");
+            } else if (newPhoneNo.length() != 10) {
+                System.out.println("Invalid Phone No! Phone number must be exactly 10 digits.");
+            }
+            System.out.print("New Phone No (leave blank to keep current): ");
+            newPhoneNo = scanner.nextLine();
+        }
+        if (!newPhoneNo.isEmpty()) {
             loggedIn.setPhoneNo(newPhoneNo);
         }
 
         System.out.print("New Email (leave blank to keep current): ");
         String newEmail = scanner.nextLine();
-        if (!newEmail.isEmpty() && isValidEmail(newEmail)) {
+        while (!newEmail.isEmpty() && !isValidEmail(newEmail)) {
+            System.out.println("Invalid Email format! Please enter a valid email (e.g., username@domain.com).");
+            System.out.print("New Email (leave blank to keep current): ");
+            newEmail = scanner.nextLine();
+        }
+        if (!newEmail.isEmpty()) {
             loggedIn.setEmail(newEmail);
         }
 
