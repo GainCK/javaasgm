@@ -296,8 +296,14 @@ public abstract class Account {
 
         System.out.print("New Name (leave blank to keep current): ");
         String newName = scanner.nextLine();
-        if (!newName.isEmpty())
+        while (!newName.isEmpty() && (isNameAlreadyUsed(newName) && !newName.equalsIgnoreCase(loggedIn.getName()))) {
+            System.out.println("This name is already in use. Please choose a different name.");
+            System.out.print("New Name (leave blank to keep current): ");
+            newName = scanner.nextLine();
+        }
+        if (!newName.isEmpty()) {
             loggedIn.setName(newName);
+        }
 
         System.out.print("New Password (leave blank to keep current): ");
         String newPassword = scanner.nextLine();
