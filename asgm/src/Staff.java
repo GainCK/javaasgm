@@ -204,6 +204,12 @@ public class Staff extends Account {
 
         Room selectedRoom = Main.roomList.get(choice - 1);
 
+          // Prevent cleaning if the room status is "Inhouse"
+    if (selectedRoom.getStatus().equalsIgnoreCase("Inhouse")) {
+        System.out.println("Error: Room is currently Inhouse and cannot be cleaned.");
+        return;
+    }
+
         System.out.print("Set cleanliness status (Clean / Dirty): ");
         String status = scanner.nextLine();
 
