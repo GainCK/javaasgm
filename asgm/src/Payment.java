@@ -143,7 +143,6 @@ public class Payment {
     public void viewPaymentDetails() {
         System.out.println("=== Payment Details ===");
         System.out.println("Payment ID: " + getPaymentId());
-        System.out.printf("Amount: RM %.2f%n" , amount);
         System.out.println("Payment Method: " + (paymentMethod == 1 ? "Cash" : paymentMethod == 2 ? "E-wallet" : "Card"));
         System.out.printf("Total Price: RM %.2f%n " ,totalPrice);
         System.out.println("Payment Status: " + paymentStatus);
@@ -157,7 +156,6 @@ public class Payment {
         } else {
             for (Payment payment : paymentList) {
                 System.out.println("Payment ID: " + payment.getPaymentId());
-                System.out.printf("Amount: RM %.2f%n" , payment.getAmount());
                 System.out.println("Payment Method: " + (payment.getPaymentMethod() == 1 ? "Cash" : payment.getPaymentMethod() == 2 ? "E-wallet" : "Card"));
                 System.out.printf("Total Price: RM %.2f%n", payment.getTotalPrice());
                 System.out.println("Payment Status: " + payment.getPaymentStatus());
