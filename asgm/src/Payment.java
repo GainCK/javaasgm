@@ -144,7 +144,7 @@ public class Payment {
         System.out.println("=== Payment Details ===");
         System.out.println("Payment ID: " + getPaymentId());
         System.out.println("Payment Method: " + (paymentMethod == 1 ? "Cash" : paymentMethod == 2 ? "E-wallet" : "Card"));
-        System.out.printf("Total Price: RM %.2f%n " ,totalPrice);
+        System.out.printf("Total Price: RM %.2f%n" ,totalPrice);
         System.out.println("Payment Status: " + paymentStatus);
         System.out.println("Booking ID: " + booking.getBookingID());
     }
