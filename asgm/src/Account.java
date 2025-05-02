@@ -176,12 +176,25 @@ public abstract class Account {
         printAccountList();
     }
 
+    private static boolean isNameAlreadyUsed(String name) {
+        for (Account acc : accountList) {
+            if (acc.getName().equalsIgnoreCase(name)) {
+                return true; // Name is already in use
+            }
+        }
+        return false; // Name is not in use
+    }
+    
     private static String[] collectUserDetails(Scanner scanner) {
         // Validate Name
         System.out.print("Enter Name (letters only): ");
         String name = scanner.nextLine();
-        while (!name.matches("[a-zA-Z ]+")) { // Name must contain only letters and spaces
-            System.out.println("Invalid Name! Name can only contain letters.");
+        while (!name.matches("[a-zA-Z ]+") || isNameAlreadyUsed(name)) { // Check if name is valid and not already used
+            if (!name.matches("[a-zA-Z ]+")) {
+                System.out.println("Invalid Name! Name can only contain letters.");
+            } else {
+                System.out.println("This name is already in use. Please choose a different name.");
+            }
             System.out.print("Enter Name (letters only): ");
             name = scanner.nextLine();
         }
