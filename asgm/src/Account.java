@@ -164,7 +164,7 @@ public abstract class Account {
         Guest guest = new Guest(details[0], details[1], details[2], details[3], details[4], details[5]);
         guest.register(guest);
         System.out.println("Guest registration completed!");
-        printAccountList();
+        printAccountList(guest);
     }
 
     private static void registerStaff(Scanner scanner) {
@@ -173,7 +173,7 @@ public abstract class Account {
         Staff staff = new Staff(details[0], details[1], details[2], details[3], details[4], details[5]);
         staff.register(staff);
         System.out.println("Staff registration completed!");
-        printAccountList();
+        printAccountList(staff);
     }
 
     private static boolean isNameAlreadyUsed(String name) {
@@ -276,18 +276,22 @@ public abstract class Account {
         }
     }
 
-    public static void printAccountList() {
+    public static void printAccountList(Account loggedIn) {
         System.out.println("\n=== Current Account List ===");
+    
         for (Account acc : Account.accountList) {
-            acc.displayAccountType();
-            System.out.println("---------------------------");
-            System.out.println("Name: " + acc.getName());
-            System.out.println("Password: " + acc.getPassword());
-            System.out.println("Birthday: " + acc.getBirthday());
-            System.out.println("IC: " + acc.getIC());
-            System.out.println("Phone No: " + acc.getPhoneNo());
-            System.out.println("Email: " + acc.getEmail());
-            System.out.println("---------------------------");
+            // Only display accounts of the same type as the logged-in user
+            if ((loggedIn instanceof Staff && acc instanceof Staff) || (loggedIn instanceof Guest && acc instanceof Guest)) {
+                acc.displayAccountType();
+                System.out.println("---------------------------");
+                System.out.println("Name: " + acc.getName());
+                System.out.println("Password: " + acc.getPassword());
+                System.out.println("Birthday: " + acc.getBirthday());
+                System.out.println("IC: " + acc.getIC());
+                System.out.println("Phone No: " + acc.getPhoneNo());
+                System.out.println("Email: " + acc.getEmail());
+                System.out.println("---------------------------");
+            }
         }
     }
 
@@ -356,6 +360,6 @@ public abstract class Account {
         }
 
         System.out.println("Profile updated successfully!");
-        printAccountList();
+        printAccountList(loggedIn);
     }
 }
