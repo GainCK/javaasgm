@@ -1,3 +1,8 @@
+//Author : Gain Chen Keat
+//Module : User Management
+//System : Hotel Management System
+//Group  : DFT1G11
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
