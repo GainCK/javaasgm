@@ -135,7 +135,6 @@ public class Payment {
         booking.setPaymentStatus("Completed");
         booking.setBookingStatus("Confirmed");
     
-        System.out.println("\nPayment details:");
         viewPaymentDetails();
     }
 

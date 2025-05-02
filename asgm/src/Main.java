@@ -65,7 +65,7 @@ public class Main {
         System.out.flush();
     }
 
-    // Staff menu
+    //  menu
     public static void staffMenu(Scanner scanner, Staff staff) {
         while (true) {
             System.out.println("\n=== Staff Menu ===");
